@@ -18,6 +18,7 @@ export default function StorefrontHomePage() {
   const topProducts = MOCK_PRODUCTS.filter((p) => p.isTopProduct);
   const cookieProducts = MOCK_PRODUCTS.filter((p) => p.category.toLowerCase().includes('cookie') || p.category.toLowerCase().includes('millet'));
   const cakeProducts = MOCK_PRODUCTS.filter((p) => p.category.toLowerCase().includes('cake'));
+  const dryBakeProducts = MOCK_PRODUCTS.filter((p) => p.category.toLowerCase().includes('dry') || p.category.toLowerCase().includes('teatime'));
 
   return (
     <div className="min-h-screen bg-[#FAF5EE] text-[#14233C] flex flex-col font-sans">
@@ -27,15 +28,16 @@ export default function StorefrontHomePage() {
         onOpenCart={() => setIsCartOpen(true)}
       />
 
-      <main className="flex-1 max-w-7xl w-full mx-auto px-4 md:px-8 py-6 space-y-12">
+      {/* Expanded Max-W Container for Full Width Layout */}
+      <main className="flex-1 max-w-[1440px] w-full mx-auto px-4 md:px-10 lg:px-12 py-8 space-y-16">
         
-        {/* 1. Savoria Style Hero Carousel */}
+        {/* 1. Hero Carousel */}
         <HeroCarousel />
 
-        {/* 2. Savoria Style "Browse By Category" Image Circular Grid */}
-        <section id="categories-section" className="space-y-6 text-center py-4">
+        {/* 2. Savoria Circular Image Category Cards Section (Enclosed Card with Border) */}
+        <section id="categories-section" className="bg-white rounded-[36px] p-8 md:p-12 border-2 border-[#1E3A5F]/15 shadow-sm space-y-8 text-center">
           <div>
-            <span className="text-xs font-extrabold uppercase tracking-widest text-[#D99036] bg-amber-50 px-3.5 py-1 rounded-full border border-amber-200 inline-block mb-1">
+            <span className="text-xs font-extrabold uppercase tracking-widest text-[#D99036] bg-amber-50 px-4 py-1.5 rounded-full border border-amber-200 inline-block mb-2">
               Fresh From Our Oven
             </span>
             <h2 className="font-serif text-3xl md:text-4xl font-extrabold text-[#14233C]">
@@ -44,20 +46,20 @@ export default function StorefrontHomePage() {
             <p className="text-xs md:text-sm text-[#5A6D82] mt-1">100% Maida-Free • Organic Jaggery Bakes</p>
           </div>
 
-          {/* Savoria Style Image Circular Category Cards */}
-          <div className="grid grid-cols-2 sm:grid-cols-4 gap-6 pt-2">
+          {/* Category Cards Grid with Crisp High-Res Images */}
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-6">
             {MOCK_CATEGORIES.map((cat) => (
               <button
                 key={cat.id}
                 onClick={() => setSelectedCategory(cat.id)}
-                className={`group bg-white rounded-3xl p-5 border transition-all duration-300 flex flex-col items-center text-center space-y-3 cursor-pointer ${
+                className={`group bg-[#FAF5EE] rounded-3xl p-6 border-2 transition-all duration-300 flex flex-col items-center text-center space-y-4 cursor-pointer ${
                   selectedCategory === cat.id
-                    ? 'border-[#D99036] shadow-lg ring-2 ring-[#D99036]/30 bg-amber-50/50 scale-102'
+                    ? 'border-[#D99036] shadow-xl ring-2 ring-[#D99036]/30 bg-amber-50/80 scale-102'
                     : 'border-[#1E3A5F]/10 hover:border-[#D99036]/50 shadow-xs hover:shadow-md hover:-translate-y-1'
                 }`}
               >
-                {/* Circular Product Image Container (Savoria Style) */}
-                <div className="relative w-28 h-28 md:w-32 md:h-32 rounded-full overflow-hidden border-4 border-[#FAF5EE] shadow-md group-hover:scale-105 transition-transform duration-500 bg-amber-50">
+                {/* High-Res Circular Image Avatar */}
+                <div className="relative w-28 h-28 md:w-36 md:h-36 rounded-full overflow-hidden border-4 border-white shadow-md group-hover:scale-105 transition-transform duration-500 bg-amber-100">
                   <Image
                     src={cat.image}
                     alt={cat.name}
@@ -66,10 +68,10 @@ export default function StorefrontHomePage() {
                   />
                 </div>
                 <div>
-                  <h3 className="font-serif font-bold text-sm md:text-base text-[#14233C] group-hover:text-[#D99036] transition-colors">
+                  <h3 className="font-serif font-bold text-sm md:text-lg text-[#14233C] group-hover:text-[#D99036] transition-colors">
                     {cat.name}
                   </h3>
-                  <span className="text-[11px] font-semibold text-[#5A6D82] block mt-0.5">
+                  <span className="text-xs font-semibold text-[#5A6D82] block mt-1">
                     {cat.itemCount} Varieties
                   </span>
                 </div>
@@ -78,8 +80,8 @@ export default function StorefrontHomePage() {
           </div>
         </section>
 
-        {/* 3. Savoria Banner: "Taste the Best, Order Now" */}
-        <section className="bg-gradient-to-r from-[#1E3A5F] via-[#1A3353] to-[#142842] text-[#FAF5EE] rounded-[36px] p-8 md:p-12 shadow-xl border border-[#1E3A5F]/20 relative overflow-hidden flex flex-col md:flex-row items-center justify-between gap-8">
+        {/* 3. Savoria Banner: "Taste the Best, Order Now" (Rounded Outer Card) */}
+        <section className="bg-gradient-to-r from-[#1E3A5F] via-[#1A3353] to-[#142842] text-[#FAF5EE] rounded-[36px] p-8 md:p-14 shadow-2xl border-2 border-[#1E3A5F]/30 relative overflow-hidden flex flex-col md:flex-row items-center justify-between gap-8">
           <div className="relative z-10 max-w-2xl space-y-3">
             <div className="flex items-center gap-2 text-[#D99036] font-extrabold text-xs uppercase tracking-wider">
               <Sparkles className="w-4 h-4" />
@@ -95,45 +97,61 @@ export default function StorefrontHomePage() {
 
           <a
             href="#popular-bakes"
-            className="btn-pill-navy bg-[#D99036] hover:bg-[#B87524] text-white text-sm font-extrabold px-8 py-3.5 rounded-full shadow-lg hover:scale-105 transition-all shrink-0 flex items-center gap-2"
+            className="btn-pill-navy bg-[#D99036] hover:bg-[#B87524] text-white text-sm font-extrabold px-8 py-4 rounded-full shadow-lg hover:scale-105 transition-all shrink-0 flex items-center gap-2"
           >
             <span>Taste the Best, Order Online</span>
             <ArrowRight className="w-4 h-4" />
           </a>
         </section>
 
-        {/* 4. Section 1: Popular Bakes (Horizontal Scroll Row) */}
-        <HorizontalProductRow
-          id="popular-bakes"
-          title="⭐ Popular Bakes & Best Sellers"
-          subtitle="Our most loved customer favorites baked fresh daily"
-          products={topProducts}
-        />
+        {/* 4. Section 1: Popular Bakes (Enclosed Rounded Card Container) */}
+        <div className="bg-white rounded-[36px] p-6 md:p-10 border-2 border-[#1E3A5F]/15 shadow-sm">
+          <HorizontalProductRow
+            id="popular-bakes"
+            title="⭐ Popular Bakes & Best Sellers"
+            subtitle="Our most loved customer favorites baked fresh daily"
+            products={topProducts}
+          />
+        </div>
 
-        {/* 5. Section 2: Guilt-Free Cookies & Biscuits */}
-        <HorizontalProductRow
-          id="cookies-section"
-          title="🍪 Guilt-Free Artisanal Cookies"
-          subtitle="Crispy, crunchy teatime bites made with Ragi, Oats & Almonds"
-          products={cookieProducts}
-        />
+        {/* 5. Section 2: Guilt-Free Cookies & Biscuits (Enclosed Rounded Card Container) */}
+        <div className="bg-white rounded-[36px] p-6 md:p-10 border-2 border-[#1E3A5F]/15 shadow-sm">
+          <HorizontalProductRow
+            id="cookies-section"
+            title="🍪 Guilt-Free Artisanal Cookies"
+            subtitle="Crispy, crunchy teatime bites made with Ragi, Oats & Almonds"
+            products={cookieProducts}
+          />
+        </div>
 
         {/* 6. Section 3: Whole Wheat Healthy Cakes */}
-        <HorizontalProductRow
-          id="cakes-section"
-          title="🎂 Whole Wheat & Jaggery Cakes"
-          subtitle="Soft, spongy, naturally sweet cakes for every occasion"
-          products={cakeProducts}
-        />
+        <div className="bg-white rounded-[36px] p-6 md:p-10 border-2 border-[#1E3A5F]/15 shadow-sm">
+          <HorizontalProductRow
+            id="cakes-section"
+            title="🎂 Whole Wheat & Jaggery Cakes"
+            subtitle="Soft, spongy, naturally sweet cakes for every occasion"
+            products={cakeProducts}
+          />
+        </div>
 
-        {/* 7. Savoria Real Reviews & Testimonials Section */}
+        {/* 7. Section 4: Teatime Dry Bakes & Rusks */}
+        <div className="bg-white rounded-[36px] p-6 md:p-10 border-2 border-[#1E3A5F]/15 shadow-sm">
+          <HorizontalProductRow
+            id="drybakes-section"
+            title="🍞 Teatime Dry Bakes & Rusks"
+            subtitle="Classic nut breads, dry cakes, and crunchy wheat rusks"
+            products={dryBakeProducts}
+          />
+        </div>
+
+        {/* 8. Customer Reviews & Testimonials Section */}
         <TestimonialsSection />
 
       </main>
 
       {/* Savoria Warm Footer */}
-      <footer className="bg-[#1E3A5F] text-[#FAF5EE] mt-16 border-t border-white/10 py-12 px-4 md:px-8">
-        <div className="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-6 text-center md:text-left">
+      <footer className="bg-[#1E3A5F] text-[#FAF5EE] mt-20 border-t border-white/10 py-12 px-4 md:px-12">
+        <div className="max-w-[1440px] mx-auto flex flex-col md:flex-row justify-between items-center gap-6 text-center md:text-left">
           <div className="space-y-2">
             <h4 className="font-serif text-xl font-bold text-amber-400">Bhagya&apos;s Healthy Bakes</h4>
             <p className="text-xs text-amber-100/70">Homemade Cakes and Cookies • No Sugar • No Maida • No Preservatives • No Dalda</p>

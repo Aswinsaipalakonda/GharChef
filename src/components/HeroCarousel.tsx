@@ -18,17 +18,17 @@ export interface BannerSlide {
 export const HERO_SLIDES: BannerSlide[] = [
   {
     id: "slide-1",
-    title: "Fresh Healthy Bakes for Every Special Moment",
+    title: "Handcrafted Organic Bakes for Every Special Moment",
     subtitle: "Artisanal cakes & cookies handcrafted with 100% organic jaggery, whole wheat flour, and pure cow desi ghee.",
     tagline: "🌾 No Sugar • No Maida • No Preservatives • No Dalda",
-    imageUrl: "https://images.unsplash.com/photo-1556910103-1c02745aae4d?w=1600&auto=format&fit=crop&q=80", // Baker holding fresh bakes (matches Savoria Hero style)
+    imageUrl: "https://images.unsplash.com/photo-1556910103-1c02745aae4d?w=1600&auto=format&fit=crop&q=80",
     buttonText: "Order Fresh Now",
     buttonLink: "#popular-bakes",
     badge: "Master Artisan Chef",
   },
   {
     id: "slide-2",
-    title: "100% Jaggery & Whole Wheat Cakes",
+    title: "100% Organic Jaggery & Whole Wheat Cakes",
     subtitle: "Deliciously rich & moist healthy cakes baked fresh every morning without refined white sugars.",
     tagline: "🎂 Pure Organic Ingredients • 100% Maida Free",
     imageUrl: "https://images.unsplash.com/photo-1578985545062-69928b1d9587?w=1600&auto=format&fit=crop&q=80",
@@ -61,11 +61,10 @@ export default function HeroCarousel() {
   const slide = HERO_SLIDES[currentIndex];
 
   return (
-    <section className="relative w-full rounded-[36px] overflow-hidden bg-[#FAF5EE] border border-[#D99036]/20 shadow-xl">
-      {/* Savoria Style Split Layout: Left Content Card, Right High-Res Image Display */}
-      <div className="grid grid-cols-1 lg:grid-cols-12 min-h-[440px] md:min-h-[500px] items-center">
+    <section className="relative w-full rounded-[36px] overflow-hidden bg-[#FAF5EE] border-2 border-[#1E3A5F]/15 shadow-xl">
+      <div className="grid grid-cols-1 lg:grid-cols-12 min-h-[460px] md:min-h-[500px] items-center">
         
-        {/* Left Text Content Area */}
+        {/* Left Text Content Card */}
         <div className="lg:col-span-6 p-8 md:p-12 lg:p-14 space-y-6 z-10 flex flex-col justify-center">
           
           {/* Badge */}
@@ -76,8 +75,8 @@ export default function HeroCarousel() {
             </span>
           </div>
 
-          {/* Title (Savoria Font Style & Warm Contrast) */}
-          <h1 className="font-serif text-3xl md:text-5xl lg:text-5xl font-extrabold text-[#14233C] leading-[1.15] tracking-tight">
+          {/* Title */}
+          <h1 className="font-serif text-3xl md:text-4xl lg:text-5xl font-extrabold text-[#14233C] leading-[1.15] tracking-tight">
             {slide.title}
           </h1>
 
@@ -91,7 +90,7 @@ export default function HeroCarousel() {
             {slide.tagline}
           </div>
 
-          {/* CTA Buttons Row (Savoria Rounded Buttons) */}
+          {/* CTA Buttons Row */}
           <div className="flex flex-wrap items-center gap-4 pt-2">
             <a
               href={slide.buttonLink}
@@ -108,8 +107,8 @@ export default function HeroCarousel() {
           </div>
         </div>
 
-        {/* Right Crisp Image Showcase (Savoria Right Curved Chef Image Display) */}
-        <div className="lg:col-span-6 relative h-[300px] sm:h-[380px] lg:h-full w-full min-h-[420px] overflow-hidden lg:rounded-l-[40px]">
+        {/* Right Crisp Image Showcase */}
+        <div className="lg:col-span-6 relative h-[320px] sm:h-[400px] lg:h-full w-full min-h-[440px] overflow-hidden lg:rounded-l-[40px] bg-amber-50">
           <Image
             key={slide.id}
             src={slide.imageUrl}
@@ -119,24 +118,21 @@ export default function HeroCarousel() {
             priority
           />
 
-          {/* Subtle Right Edge Soft Gradient */}
-          <div className="absolute inset-0 bg-gradient-to-t from-black/30 via-transparent to-transparent lg:bg-gradient-to-r lg:from-[#FAF5EE]/20 lg:to-transparent" />
-          
-          {/* Floating Slide Navigation Indicators */}
-          <div className="absolute bottom-6 right-6 flex items-center gap-3 z-20 bg-black/40 backdrop-blur-md px-4 py-2 rounded-full border border-white/20">
+          {/* Floating Slide Navigation Controls with High Visibility */}
+          <div className="absolute bottom-6 right-6 flex items-center gap-3 z-20 bg-[#1E3A5F] text-white px-5 py-2.5 rounded-full border-2 border-white/30 shadow-2xl">
             <button
               onClick={() => setCurrentIndex((prev) => (prev - 1 + HERO_SLIDES.length) % HERO_SLIDES.length)}
-              className="w-8 h-8 rounded-full bg-white/20 hover:bg-white/40 text-white flex items-center justify-center transition-colors"
+              className="w-8 h-8 rounded-full bg-white/20 hover:bg-white/40 text-white flex items-center justify-center transition-colors cursor-pointer"
               aria-label="Previous Slide"
             >
               <ChevronLeft className="w-5 h-5" />
             </button>
-            <span className="text-xs font-extrabold text-white font-mono">
+            <span className="text-xs font-extrabold text-amber-300 font-mono tracking-wider">
               0{currentIndex + 1} / 0{HERO_SLIDES.length}
             </span>
             <button
               onClick={() => setCurrentIndex((prev) => (prev + 1) % HERO_SLIDES.length)}
-              className="w-8 h-8 rounded-full bg-white/20 hover:bg-white/40 text-white flex items-center justify-center transition-colors"
+              className="w-8 h-8 rounded-full bg-white/20 hover:bg-white/40 text-white flex items-center justify-center transition-colors cursor-pointer"
               aria-label="Next Slide"
             >
               <ChevronRight className="w-5 h-5" />
