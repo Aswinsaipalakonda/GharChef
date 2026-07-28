@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import "./globals.css";
 import { CartProvider } from "@/context/CartContext";
-import { AuthProvider } from "@/context/AuthContext";
 
 export const metadata: Metadata = {
   title: "Bhagya's Healthy Bakes - No Sugar, No Maida Homemade Bakes",
@@ -19,11 +18,9 @@ export default function RootLayout({
   return (
     <html lang="en" className="h-full antialiased">
       <body className="min-h-full flex flex-col bg-[#FAF5EE] text-[#14233C]">
-        <AuthProvider>
-          <CartProvider>
-            {children}
-          </CartProvider>
-        </AuthProvider>
+        <CartProvider>
+          {children}
+        </CartProvider>
       </body>
     </html>
   );

@@ -10,35 +10,25 @@ export interface Category {
 export interface BakeProduct {
   id: string;
   name: string;
-  slug?: string;
+  slug: string;
   description: string;
   ingredients: string[];
   price: number;
-  mrp?: number;
-  weight?: string;
-  weightOptions?: string[];
+  mrp: number;
+  weight: string;
+  weightOptions: string[];
   rating: number;
   reviewsCount: number;
   image: string;
-  images?: string[];
+  images: string[];
   category: string;
-  healthBadges?: string[];
+  healthBadges: string[];
   isTopProduct?: boolean;
   isBestSeller?: boolean;
   isAvailable: boolean;
-  inStock?: boolean;
-  shelfLife?: string;
-  // Legacy compatibility fields
-  chefName?: string;
-  chefId?: string;
-  spiceLevel?: string;
-  foodType?: string;
-  availableQty?: number;
-  prepTime?: string;
-  originalPrice?: number;
+  inStock: boolean;
+  shelfLife: string;
 }
-
-export type Product = BakeProduct;
 
 export interface Banner {
   id: string;
@@ -85,8 +75,6 @@ export const MOCK_CATEGORIES: Category[] = [
     itemCount: 8,
   },
 ];
-
-export const categories = MOCK_CATEGORIES;
 
 export const MOCK_BANNERS: Banner[] = [
   {
@@ -212,7 +200,3 @@ export const MOCK_PRODUCTS: BakeProduct[] = [
     shelfLife: "30 Days",
   }
 ];
-
-export const products = MOCK_PRODUCTS;
-export const chefs: any[] = [];
-export const testimonials: any[] = [];

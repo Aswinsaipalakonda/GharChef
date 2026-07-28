@@ -6,25 +6,16 @@ export interface CartItem {
   id: string;
   name: string;
   price: number;
-  weight?: string;
+  weight: string;
   image: string;
   quantity: number;
-  healthBadges?: string[];
-  product?: any;
+  healthBadges: string[];
 }
 
 interface CartContextType {
   cart: CartItem[];
-  cartItems: CartItem[];
   cartCount: number;
   cartSubtotal: number;
-  cartDiscount: number;
-  deliveryCharge: number;
-  gstAmount: number;
-  cartTotal: number;
-  appliedCoupon: any;
-  applyCoupon: (code: string) => { success: boolean; message: string };
-  removeCoupon: () => void;
   addToCart: (item: Omit<CartItem, 'quantity'>) => void;
   removeFromCart: (id: string) => void;
   updateQuantity: (id: string, delta: number) => void;
@@ -56,13 +47,12 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
   }, [cart]);
 
   const addToCart = (item: Omit<CartItem, 'quantity'>) => {
-    const formattedItem = { ...item, product: item };
     setCart((prev) => {
       const existing = prev.find((i) => i.id === item.id);
       if (existing) {
         return prev.map((i) => (i.id === item.id ? { ...i, quantity: i.quantity + 1 } : i));
       }
-      return [...prev, { ...formattedItem, quantity: 1 }];
+      return [...prev, { ...item, quantity: 1 }];
     });
     setIsCartOpen(true);
   };
@@ -94,16 +84,8 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
     <CartContext.Provider
       value={{
         cart,
-        cartItems: cart,
         cartCount,
         cartSubtotal: totalAmount,
-        cartDiscount: 0,
-        deliveryCharge: 0,
-        gstAmount: 0,
-        cartTotal: totalAmount,
-        appliedCoupon: null,
-        applyCoupon: () => ({ success: true, message: 'Coupon applied successfully' }),
-        removeCoupon: () => {},
         addToCart,
         removeFromCart,
         updateQuantity,
