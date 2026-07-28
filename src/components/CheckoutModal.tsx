@@ -50,7 +50,7 @@ export default function CheckoutModal({ isOpen, onClose }: CheckoutModalProps) {
       notes,
       items: cart.map((i) => ({
         name: i.name,
-        weight: i.weight,
+        weight: i.weight || '500g',
         quantity: i.quantity,
         price: i.price,
       })),

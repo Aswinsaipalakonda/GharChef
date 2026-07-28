@@ -72,11 +72,13 @@ export default function ProductCard({ product }: ProductCardProps) {
           <div>
             <div className="flex items-baseline gap-1.5">
               <span className="font-serif font-bold text-lg text-[#1E3A5F]">₹{product.price}</span>
-              <span className="text-xs text-[#5A6D82] line-through font-normal">₹{product.mrp}</span>
+              {product.mrp && <span className="text-xs text-[#5A6D82] line-through font-normal">₹{product.mrp}</span>}
             </div>
-            <span className="text-[10px] font-bold text-emerald-600">
-              Save {Math.round(((product.mrp - product.price) / product.mrp) * 100)}%
-            </span>
+            {product.mrp && (
+              <span className="text-[10px] font-bold text-emerald-600">
+                Save {Math.round(((product.mrp - product.price) / product.mrp) * 100)}%
+              </span>
+            )}
           </div>
 
           {/* Rounded Add to Cart Button */}
