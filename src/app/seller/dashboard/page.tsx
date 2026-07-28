@@ -774,7 +774,7 @@ export default function SellerDashboard() {
                     </thead>
                     <tbody className="divide-y divide-zinc-50 text-zinc-600 font-medium">
                       {sellerProducts.map((p) => {
-                        const lowStock = p.availableQty <= 5;
+                        const lowStock = (p.availableQty ?? 10) <= 5;
                         return (
                           <tr key={p.id} className="hover:bg-zinc-50/50 transition-colors">
                             <td className="py-4 pr-4">
@@ -793,13 +793,13 @@ export default function SellerDashboard() {
                             <td className="py-4">
                               <div className="flex items-center gap-2">
                                 <button
-                                  onClick={() => updateInventoryQty(p.id, p.availableQty - 1)}
+                                  onClick={() => updateInventoryQty(p.id, (p.availableQty ?? 10) - 1)}
                                   className="p-1 border border-zinc-200 rounded-lg hover:bg-zinc-50"
                                 >
                                   <Minus className="w-3.5 h-3.5" />
                                 </button>
                                 <button
-                                  onClick={() => updateInventoryQty(p.id, p.availableQty + 1)}
+                                  onClick={() => updateInventoryQty(p.id, (p.availableQty ?? 10) + 1)}
                                   className="p-1 border border-zinc-200 rounded-lg hover:bg-zinc-50"
                                 >
                                   <Plus className="w-3.5 h-3.5" />
