@@ -1,557 +1,262 @@
-"use client";
+'use client';
 
-import React, { use, useState, useEffect } from "react";
-import { motion, AnimatePresence } from "framer-motion";
-import {
-  ArrowLeft,
-  Clock,
-  Heart,
-  Plus,
-  Minus,
-  Star,
-  ShieldCheck,
-  Sparkles,
-  Info,
-  ChevronRight,
-  TrendingUp,
-  X
-} from "lucide-react";
-import { Navbar } from "@/components/common/Navbar";
-import { Footer } from "@/components/common/Footer";
-import { products, Product } from "@/data/mockData";
-import { useCart } from "@/context/CartContext";
-import { Card, CardContent } from "@/components/ui/Card";
-import { Badge } from "@/components/ui/Badge";
-import { Button } from "@/components/ui/Button";
-import Link from "next/link";
+import React, { useState } from 'react';
+import Image from 'next/image';
+import Link from 'next/link';
+import { Star, ShieldCheck, Heart, ShoppingBag, Truck, RotateCcw, Award, CheckCircle2 } from 'lucide-react';
+import Header from '@/components/Header';
+import CartDrawer from '@/components/CartDrawer';
+import HorizontalProductRow from '@/components/HorizontalProductRow';
+import { MOCK_PRODUCTS } from '@/data/mockData';
+import { useCart } from '@/context/CartContext';
 
-interface ProductPageProps {
-  params: Promise<{ id: string }>;
-}
+export default function ProductDetailPage({ params }: { params: { id: string } }) {
+  const { addToCart, cart, isCartOpen, setIsCartOpen } = useCart();
+  
+  // Find product by ID or fallback to first product
+  const product = MOCK_PRODUCTS.find((p) => p.id === params.id) || MOCK_PRODUCTS[0];
 
-export default function ProductDetails({ params }: ProductPageProps) {
-  const resolvedParams = use(params);
-  const { addToCart, updateQuantity, cartItems } = useCart();
-  const productId = resolvedParams.id;
-
-  // Find target product
-  const product = products.find((p) => p.id === productId) || products[0];
-
-  const [activeTab, setActiveTab] = useState<"details" | "ingredients" | "reviews">("details");
+  const [selectedWeight, setSelectedWeight] = useState(product.weight);
   const [selectedImage, setSelectedImage] = useState(product.image);
-  const [qty, setQty] = useState(1);
-  const [isCompareOpen, setIsCompareOpen] = useState(false);
-  const [recentlyViewed, setRecentlyViewed] = useState<Product[]>([]);
-  const [favorites, setFavorites] = useState<string[]>([]);
-  const [showSticky, setShowSticky] = useState(false);
+  const [activeTab, setActiveTab] = useState<'ingredients' | 'reviews' | 'storage'>('ingredients');
 
-  // Mock alternate images for the gallery
-  const galleryImages = [
-    product.image,
-    "https://images.unsplash.com/photo-1556911220-e15b29be8c8f?q=80&w=400&auto=format&fit=crop", // Kitchen cooking
-    "https://images.unsplash.com/photo-1540420773420-3366772f4999?q=80&w=400&auto=format&fit=crop", // Raw ingredients
-    "https://images.unsplash.com/photo-1512621776951-a57141f2eefd?q=80&w=400&auto=format&fit=crop", // Clean packaging layout
-  ];
-
-  // Load and update Recently Viewed and Wishlist from localStorage
-  useEffect(() => {
-    // 1. Recently Viewed Logic
-    const viewedStr = localStorage.getItem("gharchef_viewed");
-    let viewedArr: string[] = [];
-    if (viewedStr) {
-      try {
-        viewedArr = JSON.parse(viewedStr);
-      } catch (e) {
-        console.error("Error parsing viewed items", e);
-      }
-    }
-    // Filter out current, put current at the front, limit to 4 items
-    const updatedViewed = [product.id, ...viewedArr.filter((id) => id !== product.id)].slice(0, 5);
-    localStorage.setItem("gharchef_viewed", JSON.stringify(updatedViewed));
-    
-    // Get actual Product objects for recently viewed (excluding current product)
-    const viewedProducts = updatedViewed
-      .filter((id) => id !== product.id)
-      .map((id) => products.find((p) => p.id === id))
-      .filter((p): p is Product => !!p);
-    
-    setRecentlyViewed(viewedProducts);
-
-    // 2. Wishlist Favorites Logic
-    const favsStr = localStorage.getItem("gharchef_favs");
-    if (favsStr) {
-      try {
-        setFavorites(JSON.parse(favsStr));
-      } catch (e) {}
-    }
-  }, [product.id]);
-
-  // Handle scroll trigger for bottom sticky add to cart
-  useEffect(() => {
-    const handleScroll = () => {
-      if (window.scrollY > 350) {
-        setShowSticky(true);
-      } else {
-        setShowSticky(false);
-      }
-    };
-    window.addEventListener("scroll", handleScroll);
-    return () => window.removeEventListener("scroll", handleScroll);
-  }, []);
-
-  const toggleFavorite = () => {
-    let updated: string[] = [];
-    if (favorites.includes(product.id)) {
-      updated = favorites.filter((id) => id !== product.id);
-    } else {
-      updated = [...favorites, product.id];
-    }
-    setFavorites(updated);
-    localStorage.setItem("gharchef_favs", JSON.stringify(updated));
-  };
-
-  const handleAddToCart = () => {
-    // Add item with set quantity
-    for (let i = 0; i < qty; i++) {
-      addToCart(product);
-    }
-    // Reset quantity counter
-    setQty(1);
-  };
-
-  // Find related products (same category)
-  const relatedProducts = products
-    .filter((p) => p.category === product.category && p.id !== product.id)
-    .slice(0, 4);
-
-  // Default product to compare with (the first related product or another food)
-  const compareTarget = relatedProducts[0] || products.find((p) => p.id !== product.id) || product;
+  const relatedProducts = MOCK_PRODUCTS.filter((p) => p.id !== product.id);
 
   return (
-    <div className="flex flex-col min-h-screen bg-custom-bg relative">
-      <Navbar />
+    <div className="min-h-screen bg-[#FAF5EE] text-[#14233C] flex flex-col">
+      <Header 
+        cartCount={cart.reduce((sum, item) => sum + item.quantity, 0)} 
+        onOpenCart={() => setIsCartOpen(true)} 
+      />
 
-      <main className="flex-grow max-w-[1400px] mx-auto w-full px-4 md:px-8 py-8 text-left relative">
-        
-        {/* Breadcrumb */}
-        <div className="mb-6">
-          <Link href="/" className="inline-flex items-center gap-1.5 text-xs text-secondary-text hover:text-primary transition-colors">
-            <ArrowLeft className="w-3.5 h-3.5" />
-            <span>Back to marketplace</span>
-          </Link>
-        </div>
+      <main className="flex-1 max-w-7xl w-full mx-auto px-4 md:px-8 py-8 space-y-12">
+        {/* Breadcrumb Navigation */}
+        <nav className="text-xs text-[#5A6D82] flex items-center gap-2">
+          <Link href="/" className="hover:text-[#1E3A5F]">Home</Link>
+          <span>/</span>
+          <span className="text-[#D99036] font-semibold">{product.category}</span>
+          <span>/</span>
+          <span className="text-[#14233C] font-bold truncate max-w-xs">{product.name}</span>
+        </nav>
 
-        {/* Dynamic Details grid */}
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 mb-12">
+        {/* Amazon/Flipkart Dual Column Detail View */}
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 bg-white rounded-3xl p-6 md:p-10 border border-[#1E3A5F]/10 shadow-sm">
           
-          {/* Left panel: Image Gallery */}
-          <div className="lg:col-span-5 space-y-4">
-            <div className="relative aspect-[4/3] rounded-card overflow-hidden border border-custom-border shadow-soft bg-zinc-50">
-              <img
+          {/* Left Column: Image Gallery */}
+          <div className="lg:col-span-6 space-y-4">
+            {/* Main Image */}
+            <div className="relative aspect-square w-full rounded-2xl overflow-hidden bg-amber-50 border border-[#1E3A5F]/10 shadow-sm">
+              <Image
                 src={selectedImage}
                 alt={product.name}
-                className="w-full h-full object-cover transition-transform duration-300 hover:scale-105"
+                fill
+                className="object-cover"
+                priority
               />
-              
-              {/* Veg / Non veg float */}
-              <div className="absolute top-4 right-4 bg-white/95 backdrop-blur-sm px-2.5 py-1 rounded-xl shadow-sm flex items-center gap-1">
-                <span className={`block w-2 h-2 rounded-full ${
-                  product.foodType === "veg" ? "bg-emerald-500" : "bg-rose-500"
-                }`} />
-                <span className="text-[10px] font-bold text-secondary-text capitalize">{product.foodType}</span>
-              </div>
+              <span className="absolute top-4 left-4 bg-[#1E3A5F] text-[#FAF5EE] text-xs font-bold px-3 py-1 rounded-full shadow-md">
+                100% Organic Jaggery
+              </span>
             </div>
 
-            {/* Thumbnails row */}
-            <div className="flex gap-3 overflow-x-auto pb-1 no-scrollbar">
-              {galleryImages.map((img, idx) => (
-                <button
-                  key={idx}
-                  onClick={() => setSelectedImage(img)}
-                  className={`w-20 h-16 rounded-xl overflow-hidden border-2 flex-shrink-0 transition-colors shadow-sm bg-white ${
-                    selectedImage === img ? "border-primary" : "border-custom-border hover:border-primary/40"
-                  }`}
-                >
-                  <img src={img} alt="thumbnail" className="w-full h-full object-cover" />
-                </button>
-              ))}
+            {/* Thumbnail Carousel */}
+            {product.images && product.images.length > 1 && (
+              <div className="flex items-center gap-3 overflow-x-auto no-scrollbar py-1">
+                {product.images.map((img, idx) => (
+                  <button
+                    key={idx}
+                    onClick={() => setSelectedImage(img)}
+                    className={`relative w-20 h-20 rounded-xl overflow-hidden border-2 transition-all ${
+                      selectedImage === img ? 'border-[#D99036] scale-95 shadow-md' : 'border-[#1E3A5F]/10 opacity-70'
+                    }`}
+                  >
+                    <Image src={img} alt={`Thumbnail ${idx}`} fill className="object-cover" />
+                  </button>
+                ))}
+              </div>
+            )}
+
+            {/* Health Guarantee Badges */}
+            <div className="bg-[#FAF2E8] rounded-2xl p-4 border border-[#F3D1A5] grid grid-cols-2 gap-3">
+              <div className="flex items-center gap-2 text-xs font-semibold text-[#9C5D17]">
+                <CheckCircle2 className="w-4 h-4 text-[#D99036]" />
+                <span>No Sugar Added</span>
+              </div>
+              <div className="flex items-center gap-2 text-xs font-semibold text-[#9C5D17]">
+                <CheckCircle2 className="w-4 h-4 text-[#D99036]" />
+                <span>Zero Refined Maida</span>
+              </div>
+              <div className="flex items-center gap-2 text-xs font-semibold text-[#9C5D17]">
+                <CheckCircle2 className="w-4 h-4 text-[#D99036]" />
+                <span>No Preservatives</span>
+              </div>
+              <div className="flex items-center gap-2 text-xs font-semibold text-[#9C5D17]">
+                <CheckCircle2 className="w-4 h-4 text-[#D99036]" />
+                <span>Pure Desi Ghee</span>
+              </div>
             </div>
           </div>
 
-          {/* Right panel: Product Meta info */}
-          <div className="lg:col-span-7 space-y-6">
-            
-            {/* Title Block */}
-            <div className="space-y-2">
-              <div className="flex items-center justify-between">
-                <span className="text-xs font-bold text-primary uppercase tracking-wider">{product.category}</span>
-                <button
-                  onClick={toggleFavorite}
-                  className="p-2 border border-custom-border hover:bg-light-orange hover:text-danger rounded-2xl bg-white shadow-sm transition-colors cursor-pointer"
-                >
-                  <Heart className={`w-4 h-4 ${favorites.includes(product.id) ? "fill-danger text-danger border-danger" : "text-muted"}`} />
-                </button>
-              </div>
-              <h1 className="text-2xl md:text-3xl font-bold text-primary-text">{product.name}</h1>
-              <div className="flex flex-wrap items-center gap-4 text-xs text-secondary-text">
-                <div className="flex items-center gap-1 font-bold text-amber-600 bg-amber-50 px-2 py-0.5 rounded-lg border border-amber-200 shadow-sm">
-                  <Star className="w-3.5 h-3.5 fill-amber-500 stroke-amber-500" />
+          {/* Right Column: Product Overview & Buy Box */}
+          <div className="lg:col-span-6 space-y-6">
+            <div>
+              <span className="text-xs font-bold uppercase tracking-wider text-[#D99036] bg-amber-50 px-3 py-1 rounded-full">
+                {product.category}
+              </span>
+              <h1 className="font-serif text-2xl md:text-3xl lg:text-4xl font-bold text-[#14233C] mt-2">
+                {product.name}
+              </h1>
+
+              {/* Rating & Reviews */}
+              <div className="flex items-center gap-3 mt-3">
+                <div className="flex items-center gap-1 bg-[#1E3A5F] text-white text-xs font-bold px-2.5 py-1 rounded-full">
                   <span>{product.rating}</span>
+                  <Star className="w-3 h-3 fill-amber-400 text-amber-400" />
                 </div>
-                <span>({product.reviewsCount} reviews)</span>
-                <span className="text-custom-border">|</span>
-                <div className="flex items-center gap-1">
-                  <Clock className="w-3.5 h-3.5 text-secondary-orange" />
-                  <span>Ready in {product.prepTime}</span>
+                <span className="text-xs text-[#5A6D82]">{product.reviewsCount} Customer Reviews</span>
+                <span className="text-[#5A6D82]">•</span>
+                <span className="text-xs font-semibold text-emerald-600">Freshly Baked On Order</span>
+              </div>
+            </div>
+
+            {/* Price Box */}
+            <div className="bg-[#EEF4FB] rounded-2xl p-4 border border-[#1E3A5F]/10 flex items-center justify-between">
+              <div>
+                <span className="text-xs text-[#5A6D82] block">Special Price</span>
+                <div className="flex items-baseline gap-2">
+                  <span className="font-serif font-bold text-3xl text-[#1E3A5F]">₹{product.price}</span>
+                  <span className="text-sm text-[#5A6D82] line-through">₹{product.mrp}</span>
+                  <span className="text-xs font-bold text-emerald-600">
+                    Save ₹{product.mrp - product.price} ({Math.round(((product.mrp - product.price) / product.mrp) * 100)}% OFF)
+                  </span>
                 </div>
               </div>
             </div>
 
-            {/* Chef info block */}
-            <Link href={`/chef/${product.chefId}`} className="block">
-              <div className="p-4 bg-white border border-custom-border rounded-2xl flex items-center justify-between hover:shadow-soft transition-shadow">
-                <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 rounded-full overflow-hidden border border-light-orange">
-                    <img
-                      src="https://images.unsplash.com/photo-1594744803329-e58b31de215f?q=80&w=150&auto=format&fit=crop"
-                      alt={product.chefName}
-                      className="w-full h-full object-cover"
-                    />
-                  </div>
-                  <div className="text-left">
-                    <h4 className="font-bold text-xs text-primary-text">Cooked by {product.chefName}</h4>
-                    <p className="text-[10px] text-secondary-text">FSSAI Certified Home Chef</p>
-                  </div>
-                </div>
-                <ChevronRight className="w-4 h-4 text-muted" />
+            {/* Weight / Pack Selector */}
+            <div className="space-y-2">
+              <label className="text-xs font-bold text-[#1E3A5F] uppercase tracking-wider block">
+                Select Pack Size / Weight:
+              </label>
+              <div className="flex items-center gap-3">
+                {product.weightOptions.map((w) => (
+                  <button
+                    key={w}
+                    onClick={() => setSelectedWeight(w)}
+                    className={`btn-pill-outline text-xs px-5 py-2.5 transition-all ${
+                      selectedWeight === w
+                        ? 'bg-[#1E3A5F] text-white border-[#1E3A5F] shadow-md'
+                        : 'bg-[#EEF4FB] text-[#1E3A5F]'
+                    }`}
+                  >
+                    {w}
+                  </button>
+                ))}
               </div>
-            </Link>
-
-            {/* Pricing details */}
-            <div className="flex items-end gap-3.5">
-              <span className="text-3xl font-bold text-primary-text">₹{product.price}</span>
-              {product.originalPrice && (
-                <div className="flex flex-col text-left mb-0.5">
-                  <span className="text-xs text-muted line-through">MRP ₹{product.originalPrice}</span>
-                  {product.discount && (
-                    <span className="text-[10px] font-bold text-emerald-600">Save {product.discount}%</span>
-                  )}
-                </div>
-              )}
             </div>
 
-            {/* Description & Tab Panels */}
-            <div className="border-b border-custom-border flex gap-4">
-              {["details", "ingredients", "reviews"].map((t) => (
-                <button
-                  key={t}
-                  onClick={() => setActiveTab(t as any)}
-                  className={`pb-2.5 text-xs font-semibold uppercase tracking-wider border-b-2 transition-colors cursor-pointer ${
-                    activeTab === t ? "border-primary text-primary font-bold" : "border-transparent text-secondary-text hover:text-primary-text"
-                  }`}
-                >
-                  {t}
-                </button>
-              ))}
-            </div>
-
-            {/* Tab content panels */}
-            <div className="text-xs text-secondary-text leading-relaxed min-h-[100px]">
-              {activeTab === "details" && (
-                <div className="space-y-3">
-                  <p>{product.description}</p>
-                  <div className="grid grid-cols-2 gap-3.5 pt-2 text-[11px] text-primary-text">
-                    <div className="flex items-center gap-1.5">
-                      <ShieldCheck className="w-4 h-4 text-emerald-600" />
-                      <span>Zero Added Preservatives</span>
-                    </div>
-                    <div className="flex items-center gap-1.5">
-                      <Sparkles className="w-4 h-4 text-emerald-600" />
-                      <span>Cooked with Cold-Pressed Oil</span>
-                    </div>
-                  </div>
-                </div>
-              )}
-
-              {activeTab === "ingredients" && (
-                <div className="space-y-2">
-                  <p className="mb-2">This home-cooked dish contains premium, farm-fresh ingredients:</p>
-                  <div className="flex flex-wrap gap-2">
-                    {product.ingredients.map((ing) => (
-                      <span key={ing} className="px-3 py-1.5 bg-white border border-custom-border rounded-xl text-primary-text font-medium">
-                        {ing}
-                      </span>
-                    ))}
-                  </div>
-                </div>
-              )}
-
-              {activeTab === "reviews" && (
-                <div className="space-y-4 text-left">
-                  {/* Mock reviews logs */}
-                  <div className="p-4 bg-white border border-custom-border rounded-2xl space-y-2 shadow-sm">
-                    <div className="flex items-center justify-between">
-                      <div className="flex items-center gap-2">
-                        <span className="font-bold text-xs text-primary-text">Sunita R.</span>
-                        <div className="flex gap-0.5">
-                          {Array.from({ length: 5 }).map((_, i) => (
-                            <Star key={i} className="w-3 h-3 fill-amber-400 stroke-amber-400" />
-                          ))}
-                        </div>
-                      </div>
-                      <span className="text-[10px] text-muted">2 days ago</span>
-                    </div>
-                    <p className="text-[11px] italic">"Super fresh and perfectly spicy! Packaging was extremely neat and hygienic."</p>
-                    
-                    {/* Chef Reply */}
-                    <div className="p-2.5 bg-light-orange/30 border border-light-orange/40 rounded-xl mt-2 ml-4 text-[10px] text-secondary-orange">
-                      <strong>Chef Reply:</strong> Thank you, Sunita! I prepared the spices fresh that morning. Looking forward to cooking for you again!
-                    </div>
-                  </div>
-                </div>
-              )}
-            </div>
-
-            {/* Compare & Add buttons */}
-            <div className="flex items-center gap-4 pt-4 border-t border-custom-border/50">
-              {/* Qty Counter */}
-              <div className="flex items-center gap-3.5 border border-custom-border rounded-2xl px-3.5 py-2 bg-white">
-                <button
-                  onClick={() => setQty(Math.max(1, qty - 1))}
-                  className="text-primary hover:bg-light-orange p-1 rounded-lg transition-colors cursor-pointer"
-                >
-                  <Minus className="w-4 h-4" />
-                </button>
-                <span className="text-sm font-bold w-4 text-center text-primary-text">{qty}</span>
-                <button
-                  onClick={() => setQty(qty + 1)}
-                  className="text-primary hover:bg-light-orange p-1 rounded-lg transition-colors cursor-pointer"
-                >
-                  <Plus className="w-4 h-4" />
-                </button>
-              </div>
-
-              {/* Add to Cart */}
-              <Button onClick={handleAddToCart} variant="primary" className="flex-1 py-4 font-bold shadow-soft">
-                Add to Cart (₹{product.price * qty})
-              </Button>
-
-              {/* Food Comparison Toggle */}
+            {/* Action Buttons */}
+            <div className="flex items-center gap-4 pt-4 border-t border-[#1E3A5F]/10">
               <button
-                onClick={() => setIsCompareOpen(true)}
-                className="px-4 py-3.5 border border-custom-border hover:border-primary/30 rounded-2xl bg-white text-xs font-semibold text-secondary-text shadow-sm transition-colors cursor-pointer flex items-center gap-1"
+                onClick={() => {
+                  addToCart({
+                    id: product.id,
+                    name: product.name,
+                    price: product.price,
+                    weight: selectedWeight,
+                    image: product.image,
+                    healthBadges: product.healthBadges,
+                  });
+                }}
+                className="btn-pill-navy flex-1 py-3.5 text-sm font-bold shadow-md hover:scale-102 transition-all flex items-center justify-center gap-2"
               >
-                <TrendingUp className="w-4 h-4 text-primary" />
-                <span>Compare</span>
+                <ShoppingBag className="w-4 h-4 text-amber-400" />
+                <span>Add to Cart</span>
               </button>
             </div>
 
-          </div>
+            {/* Delivery Assurance */}
+            <div className="grid grid-cols-3 gap-2 pt-4 text-center text-xs text-[#5A6D82]">
+              <div className="p-3 bg-amber-50/50 rounded-xl border border-amber-200/50">
+                <Truck className="w-5 h-5 mx-auto text-[#D99036] mb-1" />
+                <span className="font-semibold block text-[#14233C]">Same Day Bake</span>
+                <span>Dispatched Fresh</span>
+              </div>
+              <div className="p-3 bg-amber-50/50 rounded-xl border border-amber-200/50">
+                <ShieldCheck className="w-5 h-5 mx-auto text-[#D99036] mb-1" />
+                <span className="font-semibold block text-[#14233C]">Safe Packaging</span>
+                <span>Hygienic Seal</span>
+              </div>
+              <div className="p-3 bg-amber-50/50 rounded-xl border border-amber-200/50">
+                <Award className="w-5 h-5 mx-auto text-[#D99036] mb-1" />
+                <span className="font-semibold block text-[#14233C]">Shelf Life</span>
+                <span>{product.shelfLife}</span>
+              </div>
+            </div>
 
+          </div>
         </div>
 
-        {/* FOOD COMPARISON OVERLAY MODAL */}
-        <AnimatePresence>
-          {isCompareOpen && (
-            <>
-              <motion.div
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 0.4 }}
-                exit={{ opacity: 0 }}
-                onClick={() => setIsCompareOpen(false)}
-                className="fixed inset-0 bg-black z-50"
-              />
-              
-              <motion.div
-                initial={{ opacity: 0, scale: 0.95, y: 30 }}
-                animate={{ opacity: 1, scale: 1, y: 0 }}
-                exit={{ opacity: 0, scale: 0.95, y: 30 }}
-                className="fixed inset-x-4 top-[10%] md:inset-x-auto md:left-1/2 md:-translate-x-1/2 md:w-[600px] bg-white rounded-card shadow-soft-lg z-50 overflow-hidden text-left"
+        {/* Tabbed Info Section (Ingredients, Reviews, Storage) */}
+        <div className="bg-white rounded-3xl p-6 md:p-8 border border-[#1E3A5F]/10 shadow-sm space-y-6">
+          <div className="flex border-b border-[#1E3A5F]/10 gap-6">
+            {(['ingredients', 'reviews', 'storage'] as const).map((tab) => (
+              <button
+                key={tab}
+                onClick={() => setActiveTab(tab)}
+                className={`pb-3 text-sm font-bold capitalize transition-colors border-b-2 ${
+                  activeTab === tab
+                    ? 'border-[#D99036] text-[#D99036]'
+                    : 'border-transparent text-[#5A6D82] hover:text-[#1E3A5F]'
+                }`}
               >
-                {/* Header */}
-                <div className="p-5 border-b border-custom-border flex items-center justify-between">
-                  <h3 className="font-bold text-base text-primary-text flex items-center gap-1.5">
-                    <TrendingUp className="w-5 h-5 text-primary" />
-                    <span>Food Comparison</span>
-                  </h3>
-                  <button
-                    onClick={() => setIsCompareOpen(false)}
-                    className="p-1.5 rounded-xl border border-custom-border hover:bg-light-orange transition-colors cursor-pointer"
-                  >
-                    <X className="w-4 h-4" />
-                  </button>
-                </div>
+                {tab === 'ingredients' ? '100% Wholesome Ingredients' : tab}
+              </button>
+            ))}
+          </div>
 
-                {/* Compare Grid */}
-                <div className="p-6 overflow-y-auto max-h-[400px]">
-                  <table className="w-full text-xs text-left border-collapse">
-                    <thead>
-                      <tr className="border-b border-custom-border">
-                        <th className="py-2.5 font-bold text-secondary-text uppercase text-[10px]">Parameter</th>
-                        <th className="py-2.5 font-bold text-primary-text truncate pr-4">{product.name}</th>
-                        <th className="py-2.5 font-bold text-secondary-orange truncate">{compareTarget.name}</th>
-                      </tr>
-                    </thead>
-                    <tbody className="divide-y divide-custom-border/50 text-secondary-text">
-                      <tr>
-                        <td className="py-3 font-semibold text-primary-text">Home Chef</td>
-                        <td className="py-3 pr-4">{product.chefName}</td>
-                        <td className="py-3 text-secondary-orange">{compareTarget.chefName}</td>
-                      </tr>
-                      <tr>
-                        <td className="py-3 font-semibold text-primary-text">Category</td>
-                        <td className="py-3 pr-4">{product.category}</td>
-                        <td className="py-3">{compareTarget.category}</td>
-                      </tr>
-                      <tr>
-                        <td className="py-3 font-semibold text-primary-text">Price</td>
-                        <td className="py-3 font-bold text-primary-text pr-4">₹{product.price}</td>
-                        <td className="py-3 font-bold text-secondary-orange">₹{compareTarget.price}</td>
-                      </tr>
-                      <tr>
-                        <td className="py-3 font-semibold text-primary-text">Rating Score</td>
-                        <td className="py-3 pr-4 flex items-center gap-1 font-bold text-primary-text">
-                          <Star className="w-3.5 h-3.5 fill-amber-400 stroke-amber-400" />
-                          <span>{product.rating}</span>
-                        </td>
-                        <td className="py-3 text-secondary-orange font-bold">
-                          <span className="flex items-center gap-1">
-                            <Star className="w-3.5 h-3.5 fill-amber-400 stroke-amber-400" />
-                            <span>{compareTarget.rating}</span>
-                          </span>
-                        </td>
-                      </tr>
-                      <tr>
-                        <td className="py-3 font-semibold text-primary-text">Food Diet Type</td>
-                        <td className="py-3 pr-4 capitalize">{product.foodType}</td>
-                        <td className="py-3 capitalize">{compareTarget.foodType}</td>
-                      </tr>
-                      <tr>
-                        <td className="py-3 font-semibold text-primary-text">Spice Level</td>
-                        <td className="py-3 pr-4 capitalize">{product.spiceLevel}</td>
-                        <td className="py-3 capitalize">{compareTarget.spiceLevel}</td>
-                      </tr>
-                      <tr>
-                        <td className="py-3 font-semibold text-primary-text">Prep Time</td>
-                        <td className="py-3 pr-4">{product.prepTime}</td>
-                        <td className="py-3">{compareTarget.prepTime}</td>
-                      </tr>
-                      <tr>
-                        <td className="py-3 font-semibold text-primary-text">Ingredients</td>
-                        <td className="py-3 pr-4 max-w-[180px] truncate">{product.ingredients.join(", ")}</td>
-                        <td className="py-3 max-w-[180px] truncate">{compareTarget.ingredients.join(", ")}</td>
-                      </tr>
-                    </tbody>
-                  </table>
-                  
-                  <div className="bg-light-orange/40 border border-light-orange/50 p-3 rounded-2xl flex gap-2 text-[10px] text-secondary-orange mt-4 leading-relaxed">
-                    <Info className="w-4 h-4 flex-shrink-0 mt-0.5" />
-                    <span>
-                      <strong>Nutrition Note:</strong> Home food values represent chef estimations. Both kitchens are audited for pure, preservative-free preparation.
-                    </span>
-                  </div>
-                </div>
-              </motion.div>
-            </>
+          {activeTab === 'ingredients' && (
+            <div className="space-y-4">
+              <p className="text-sm text-[#5A6D82] leading-relaxed">
+                We take pride in absolute transparency. Every item from Bhagya&apos;s Healthy Bakes is hand-crafted with pure organic ingredients without synthetic preservatives or palm oils.
+              </p>
+              <div className="flex flex-wrap gap-2">
+                {product.ingredients.map((ing, idx) => (
+                  <span key={idx} className="health-badge text-xs py-1 px-3">
+                    🌱 {ing}
+                  </span>
+                ))}
+              </div>
+            </div>
           )}
-        </AnimatePresence>
 
-        {/* RELATED PRODUCTS */}
-        {relatedProducts.length > 0 && (
-          <section className="mt-16 border-t border-custom-border/60 pt-10">
-            <h2 className="text-xl font-bold text-primary-text mb-6">Related Homemade Dishes</h2>
-            <div className="flex overflow-x-auto gap-6 pb-4 no-scrollbar">
-              {relatedProducts.map((p) => (
-                <Card
-                  key={p.id}
-                  className="group flex flex-col h-full bg-white rounded-card overflow-hidden shadow-soft border border-custom-border w-[240px] flex-shrink-0"
-                >
-                  <div className="relative aspect-[4/3] w-full overflow-hidden bg-zinc-50">
-                    <img src={p.image} alt={p.name} className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105" />
-                  </div>
-                  <CardContent className="p-4 space-y-2 text-left">
-                    <span className="text-[9px] font-bold text-muted uppercase">{p.category}</span>
-                    <Link href={`/product/${p.id}`} className="block">
-                      <h4 className="font-bold text-xs text-primary-text truncate group-hover:text-primary transition-colors">{p.name}</h4>
-                    </Link>
-                    <div className="flex justify-between items-center pt-1.5 border-t border-custom-border/50">
-                      <span className="font-bold text-xs text-primary-text">₹{p.price}</span>
-                      <button
-                        onClick={() => addToCart(p)}
-                        className="p-1.5 bg-primary hover:bg-primary-hover text-white rounded-lg transition-colors cursor-pointer"
-                      >
-                        <Plus className="w-3.5 h-3.5" />
-                      </button>
-                    </div>
-                  </CardContent>
-                </Card>
-              ))}
+          {activeTab === 'reviews' && (
+            <div className="space-y-4">
+              <div className="flex items-center gap-2">
+                <span className="font-serif text-2xl font-bold text-[#1E3A5F]">{product.rating} out of 5</span>
+                <div className="flex text-amber-400">★★★★★</div>
+              </div>
+              <p className="text-xs text-[#5A6D82]">Based on verified purchases from Vizag &amp; Hyderabad customers.</p>
             </div>
-          </section>
-        )}
+          )}
 
-        {/* RECENTLY VIEWED SHELF */}
-        {recentlyViewed.length > 0 && (
-          <section className="mt-12 border-t border-custom-border/60 pt-10">
-            <h2 className="text-xl font-bold text-primary-text mb-6">Recently Viewed Foods</h2>
-            <div className="flex overflow-x-auto gap-6 pb-4 no-scrollbar">
-              {recentlyViewed.map((p) => (
-                <Card
-                  key={p.id}
-                  className="group flex flex-col h-full bg-white rounded-card overflow-hidden shadow-soft border border-custom-border w-[200px] flex-shrink-0"
-                >
-                  <div className="relative aspect-[4/3] w-full overflow-hidden bg-zinc-50">
-                    <img src={p.image} alt={p.name} className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105" />
-                  </div>
-                  <CardContent className="p-3.5 space-y-2 text-left">
-                    <span className="text-[8px] font-bold text-muted uppercase">{p.category}</span>
-                    <Link href={`/product/${p.id}`} className="block">
-                      <h4 className="font-bold text-xs text-primary-text truncate group-hover:text-primary transition-colors">{p.name}</h4>
-                    </Link>
-                    <span className="font-bold text-xs text-primary">₹{p.price}</span>
-                  </CardContent>
-                </Card>
-              ))}
+          {activeTab === 'storage' && (
+            <div className="text-xs text-[#5A6D82] space-y-2">
+              <p>• Store in a cool, dry place away from direct sunlight.</p>
+              <p>• Store in an airtight container once opened to preserve crispness.</p>
+              <p>• Best consumed within {product.shelfLife}.</p>
             </div>
-          </section>
-        )}
+          )}
+        </div>
 
+        {/* Related Products Horizontal Scroll Row */}
+        <HorizontalProductRow
+          title="Customers Also Loved"
+          subtitle="Explore more guilt-free cakes & artisanal bakes"
+          products={relatedProducts}
+        />
       </main>
 
-      {/* STICKY BOTTOM ADD TO CART (Fades in on scroll down, matching mobile layout rules) */}
-      <AnimatePresence>
-        {showSticky && (
-          <motion.div
-            initial={{ y: 80, opacity: 0 }}
-            animate={{ y: 0, opacity: 1 }}
-            exit={{ y: 80, opacity: 0 }}
-            transition={{ type: "tween", duration: 0.2 }}
-            className="fixed bottom-0 left-0 right-0 z-30 bg-white border-t border-custom-border shadow-[0_-8px_30px_rgba(0,0,0,0.06)] py-4 px-6 flex items-center justify-between max-w-[1400px] mx-auto w-full"
-          >
-            <div className="flex items-center gap-3">
-              <img src={product.image} alt="Sticky food" className="w-12 h-12 rounded-xl object-cover hidden sm:block border border-custom-border" />
-              <div className="text-left">
-                <h4 className="font-bold text-sm text-primary-text line-clamp-1">{product.name}</h4>
-                <p className="text-xs text-primary font-bold">₹{product.price * qty}</p>
-              </div>
-            </div>
-
-            <div className="flex items-center gap-4">
-              {/* Qty */}
-              <div className="flex items-center gap-2.5 border border-custom-border rounded-xl px-2 py-1 bg-custom-bg">
-                <button onClick={() => setQty(Math.max(1, qty - 1))} className="text-primary p-0.5 rounded transition-colors"><Minus className="w-3.5 h-3.5" /></button>
-                <span className="text-xs font-bold w-4 text-center text-primary-text">{qty}</span>
-                <button onClick={() => setQty(qty + 1)} className="text-primary p-0.5 rounded transition-colors"><Plus className="w-3.5 h-3.5" /></button>
-              </div>
-              <Button onClick={handleAddToCart} variant="primary" size="sm" className="font-bold shadow-soft">
-                Add (₹{product.price * qty})
-              </Button>
-            </div>
-          </motion.div>
-        )}
-      </AnimatePresence>
-
-      <Footer />
+      <CartDrawer />
     </div>
   );
 }

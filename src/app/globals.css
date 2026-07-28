@@ -1,30 +1,106 @@
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=Lora:ital,wght@0,500;0,600;1,400&display=swap');
 @import "tailwindcss";
 
 @theme {
-  --font-sans: var(--font-inter), system-ui, sans-serif;
+  --font-sans: 'Outfit', system-ui, -apple-system, sans-serif;
+  --font-serif: 'Lora', Georgia, serif;
   
-  --color-primary: #FC8019;
-  --color-primary-hover: #E56F12;
-  --color-secondary-orange: #FF9F43;
-  --color-light-orange: #FFF3E8;
-  --color-custom-bg: #FAFAFA;
-  --color-custom-border: #ECECEC;
-  --color-primary-text: #222222;
-  --color-secondary-text: #6B7280;
+  /* Brand Palette from Bhagya's Healthy Bakes Logo */
+  --color-navy: #1E3A5F;
+  --color-navy-dark: #142842;
+  --color-navy-light: #2D507B;
   
-  --shadow-soft: 0 4px 20px -2px rgba(0, 0, 0, 0.03), 0 2px 8px -1px rgba(0, 0, 0, 0.02);
-  --shadow-soft-md: 0 10px 30px -4px rgba(0, 0, 0, 0.05), 0 4px 12px -2px rgba(0, 0, 0, 0.02);
-  --shadow-soft-lg: 0 20px 40px -4px rgba(0, 0, 0, 0.06), 0 8px 16px -2px rgba(0, 0, 0, 0.03);
+  --color-amber: #D99036;
+  --color-amber-dark: #B87524;
+  --color-amber-light: #F4A242;
+  
+  --color-cream: #FAF5EE;
+  --color-cream-card: #FFFFFF;
+  --color-pill-blue: #EEF4FB;
+  --color-pill-blue-hover: #E2EDF8;
+  
+  --color-text-main: #14233C;
+  --color-text-muted: #5A6D82;
+  
+  --shadow-bhagya: 0 8px 30px -4px rgba(30, 58, 95, 0.08), 0 2px 10px -2px rgba(30, 58, 95, 0.04);
+  --shadow-bhagya-hover: 0 14px 35px -4px rgba(30, 58, 95, 0.14), 0 4px 12px -2px rgba(30, 58, 95, 0.08);
+}
+
+:root {
+  --navy: #1E3A5F;
+  --navy-dark: #142842;
+  --amber: #D99036;
+  --cream: #FAF5EE;
+  --pill-blue: #EEF4FB;
+  --text-main: #14233C;
 }
 
 body {
-  background-color: #FAFAFA;
-  color: #222222;
+  background-color: var(--cream);
+  color: var(--text-main);
   font-family: var(--font-sans);
   -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
-/* Custom scrollbar for horizontal categories slider */
+/* Rounded Pill Button Utility Classes */
+.btn-pill-navy {
+  background-color: var(--navy);
+  color: #FFFFFF;
+  border-radius: 9999px;
+  padding: 0.65rem 1.6rem;
+  font-weight: 600;
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  box-shadow: 0 4px 14px rgba(30, 58, 95, 0.15);
+  cursor: pointer;
+}
+
+.btn-pill-navy:hover {
+  background-color: var(--navy-dark);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(30, 58, 95, 0.25);
+}
+
+.btn-pill-outline {
+  background-color: var(--pill-blue);
+  color: var(--navy);
+  border: 1.5px solid var(--navy);
+  border-radius: 9999px;
+  padding: 0.65rem 1.6rem;
+  font-weight: 600;
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  cursor: pointer;
+}
+
+.btn-pill-outline:hover {
+  background-color: #E2EDF8;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(30, 58, 95, 0.12);
+}
+
+/* Health Badge Pill */
+.health-badge {
+  background-color: #FAF2E8;
+  color: #9C5D17;
+  border: 1px solid #F3D1A5;
+  border-radius: 9999px;
+  padding: 0.25rem 0.75rem;
+  font-size: 0.8rem;
+  font-weight: 600;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+}
+
+/* Hide scrollbar utility */
 .no-scrollbar::-webkit-scrollbar {
   display: none;
 }
@@ -33,9 +109,9 @@ body {
   scrollbar-width: none;
 }
 
-/* Glassmorphism utility */
+/* Glassmorphism Header */
 .glass-header {
-  background: rgba(255, 255, 255, 0.85);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
+  background: rgba(250, 245, 238, 0.92);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
 }

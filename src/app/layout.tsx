@@ -1,18 +1,13 @@
 import type { Metadata } from "next";
-import { Inter } from "next/font/google";
 import "./globals.css";
-import { AuthProvider } from "@/context/AuthContext";
 import { CartProvider } from "@/context/CartContext";
 
-const inter = Inter({
-  variable: "--font-inter",
-  subsets: ["latin"],
-  weight: ["400", "500", "600", "700"],
-});
-
 export const metadata: Metadata = {
-  title: "GharChef - Premium Homemade Food Marketplace",
-  description: "Connect with talented local home chefs for fresh, hygienic, and authentic homemade meals.",
+  title: "Bhagya's Healthy Bakes - No Sugar, No Maida Homemade Bakes",
+  description: "Guilt-free cakes & artisanal cookies made with 100% whole wheat, organic jaggery, and pure desi ghee. No Sugar, No Maida, No Preservatives, No Dalda.",
+  icons: {
+    icon: "/images/logo.png",
+  },
 };
 
 export default function RootLayout({
@@ -21,16 +16,11 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html
-      lang="en"
-      className={`${inter.variable} h-full antialiased`}
-    >
-      <body className="min-h-full flex flex-col bg-custom-bg text-primary-text">
-        <AuthProvider>
-          <CartProvider>
-            {children}
-          </CartProvider>
-        </AuthProvider>
+    <html lang="en" className="h-full antialiased">
+      <body className="min-h-full flex flex-col bg-[#FAF5EE] text-[#14233C]">
+        <CartProvider>
+          {children}
+        </CartProvider>
       </body>
     </html>
   );
