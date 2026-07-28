@@ -6,10 +6,10 @@ export interface CartItem {
   id: string;
   name: string;
   price: number;
-  weight: string;
+  weight?: string;
   image: string;
   quantity: number;
-  healthBadges: string[];
+  healthBadges?: string[];
   product?: any;
 }
 

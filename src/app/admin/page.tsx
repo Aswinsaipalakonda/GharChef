@@ -351,7 +351,7 @@ export default function AdminDashboardPage() {
                     </span>
                   </div>
                   <div className="flex flex-wrap gap-1">
-                    {p.healthBadges.map((b, idx) => (
+                    {p.healthBadges?.map((b, idx) => (
                       <span key={idx} className="text-[9px] bg-amber-50 text-[#9C5D17] border border-amber-200 px-1.5 py-0.5 rounded-full font-bold">
                         {b}
                       </span>

@@ -124,10 +124,14 @@ export default function ProductDetailPage({ params }: { params: { id: string } }
                 <span className="text-xs text-[#5A6D82] block">Special Price</span>
                 <div className="flex items-baseline gap-2">
                   <span className="font-serif font-bold text-3xl text-[#1E3A5F]">₹{product.price}</span>
-                  <span className="text-sm text-[#5A6D82] line-through">₹{product.mrp}</span>
-                  <span className="text-xs font-bold text-emerald-600">
-                    Save ₹{product.mrp - product.price} ({Math.round(((product.mrp - product.price) / product.mrp) * 100)}% OFF)
-                  </span>
+                  {product.mrp && (
+                    <>
+                      <span className="text-sm text-[#5A6D82] line-through">₹{product.mrp}</span>
+                      <span className="text-xs font-bold text-emerald-600">
+                        Save ₹{product.mrp - product.price} ({Math.round(((product.mrp - product.price) / product.mrp) * 100)}% OFF)
+                      </span>
+                    </>
+                  )}
                 </div>
               </div>
             </div>
@@ -138,7 +142,7 @@ export default function ProductDetailPage({ params }: { params: { id: string } }
                 Select Pack Size / Weight:
               </label>
               <div className="flex items-center gap-3">
-                {product.weightOptions.map((w) => (
+                {product.weightOptions?.map((w) => (
                   <button
                     key={w}
                     onClick={() => setSelectedWeight(w)}
