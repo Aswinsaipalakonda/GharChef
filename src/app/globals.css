@@ -1,26 +1,41 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
-
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+@theme {
+  --font-sans: var(--font-inter), system-ui, sans-serif;
+  
+  --color-primary: #FC8019;
+  --color-primary-hover: #E56F12;
+  --color-secondary-orange: #FF9F43;
+  --color-light-orange: #FFF3E8;
+  --color-custom-bg: #FAFAFA;
+  --color-custom-border: #ECECEC;
+  --color-primary-text: #222222;
+  --color-secondary-text: #6B7280;
+  
+  --shadow-soft: 0 4px 20px -2px rgba(0, 0, 0, 0.03), 0 2px 8px -1px rgba(0, 0, 0, 0.02);
+  --shadow-soft-md: 0 10px 30px -4px rgba(0, 0, 0, 0.05), 0 4px 12px -2px rgba(0, 0, 0, 0.02);
+  --shadow-soft-lg: 0 20px 40px -4px rgba(0, 0, 0, 0.06), 0 8px 16px -2px rgba(0, 0, 0, 0.03);
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background-color: #FAFAFA;
+  color: #222222;
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Custom scrollbar for horizontal categories slider */
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+/* Glassmorphism utility */
+.glass-header {
+  background: rgba(255, 255, 255, 0.85);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
 }
