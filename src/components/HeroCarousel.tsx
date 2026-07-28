@@ -3,100 +3,148 @@
 import React, { useState, useEffect } from 'react';
 import Image from 'next/image';
 import { ChevronLeft, ChevronRight, Sparkles } from 'lucide-react';
-import { MOCK_BANNERS } from '@/data/mockData';
+
+export interface BannerSlide {
+  id: string;
+  title: string;
+  subtitle: string;
+  tagline: string;
+  imageUrl: string;
+  buttonText: string;
+  buttonLink: string;
+  badge: string;
+}
+
+export const HERO_SLIDES: BannerSlide[] = [
+  {
+    id: "slide-1",
+    title: "Fresh Healthy Bakes for Every Special Moment",
+    subtitle: "Artisanal cakes & cookies handcrafted with 100% organic jaggery, whole wheat flour, and pure cow desi ghee.",
+    tagline: "🌾 No Sugar • No Maida • No Preservatives • No Dalda",
+    imageUrl: "https://images.unsplash.com/photo-1556910103-1c02745aae4d?w=1600&auto=format&fit=crop&q=80", // Baker holding fresh bakes (matches Savoria Hero style)
+    buttonText: "Order Fresh Now",
+    buttonLink: "#popular-bakes",
+    badge: "Master Artisan Chef",
+  },
+  {
+    id: "slide-2",
+    title: "100% Jaggery & Whole Wheat Cakes",
+    subtitle: "Deliciously rich & moist healthy cakes baked fresh every morning without refined white sugars.",
+    tagline: "🎂 Pure Organic Ingredients • 100% Maida Free",
+    imageUrl: "https://images.unsplash.com/photo-1578985545062-69928b1d9587?w=1600&auto=format&fit=crop&q=80",
+    buttonText: "Explore Healthy Cakes",
+    buttonLink: "#cakes-section",
+    badge: "100% Whole Wheat",
+  },
+  {
+    id: "slide-3",
+    title: "Crunchy Artisanal Millet & Oats Cookies",
+    subtitle: "Nutrient-dense teatime snacks made with Ragi, Foxtail Millet, Almonds, and Pistachios.",
+    tagline: "🍪 Fiber Rich • Zero Trans Fat • Pure Desi Ghee",
+    imageUrl: "https://images.unsplash.com/photo-1499636136210-6f4ee915583e?w=1600&auto=format&fit=crop&q=80",
+    buttonText: "Explore Cookies",
+    buttonLink: "#cookies-section",
+    badge: "Guilt-Free Teatime",
+  },
+];
 
 export default function HeroCarousel() {
   const [currentIndex, setCurrentIndex] = useState(0);
 
   useEffect(() => {
     const timer = setInterval(() => {
-      setCurrentIndex((prev) => (prev + 1) % MOCK_BANNERS.length);
-    }, 5000);
+      setCurrentIndex((prev) => (prev + 1) % HERO_SLIDES.length);
+    }, 5500);
     return () => clearInterval(timer);
   }, []);
 
-  const currentSlide = MOCK_BANNERS[currentIndex];
+  const slide = HERO_SLIDES[currentIndex];
 
   return (
-    <div className="relative w-full rounded-3xl overflow-hidden shadow-2xl border border-slate-200 bg-slate-900">
-      <div className="relative h-[380px] md:h-[460px] lg:h-[500px] w-full">
-        {/* Full Image Display Without Dark Color Overlays */}
-        <Image
-          src={currentSlide.imageUrl}
-          alt={currentSlide.title}
-          fill
-          className="object-cover opacity-100 transition-opacity duration-700"
-          priority
-        />
+    <section className="relative w-full rounded-[36px] overflow-hidden bg-[#FAF5EE] border border-[#D99036]/20 shadow-xl">
+      {/* Savoria Style Split Layout: Left Content Card, Right High-Res Image Display */}
+      <div className="grid grid-cols-1 lg:grid-cols-12 min-h-[440px] md:min-h-[500px] items-center">
+        
+        {/* Left Text Content Area */}
+        <div className="lg:col-span-6 p-8 md:p-12 lg:p-14 space-y-6 z-10 flex flex-col justify-center">
+          
+          {/* Badge */}
+          <div className="flex items-center gap-2">
+            <span className="bg-[#D99036]/15 text-[#D99036] border border-[#D99036]/30 text-xs font-extrabold px-4 py-1.5 rounded-full uppercase tracking-wider flex items-center gap-1.5 shadow-xs">
+              <Sparkles className="w-3.5 h-3.5 text-[#D99036]" />
+              {slide.badge}
+            </span>
+          </div>
 
-        {/* Clean Vignette & Frosted Content Pill Overlay */}
-        <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent flex items-end p-6 md:p-12">
-          <div className="max-w-2xl bg-black/40 backdrop-blur-md p-6 md:p-8 rounded-3xl border border-white/20 text-white space-y-3.5 shadow-2xl">
-            
-            {/* Health Highlights Badges */}
-            <div className="flex flex-wrap items-center gap-2">
-              <span className="bg-[#D99036] text-white text-xs font-extrabold px-3.5 py-1 rounded-full uppercase tracking-wider shadow-md flex items-center gap-1.5">
-                <Sparkles className="w-3.5 h-3.5 text-amber-200" />
-                Fresh Healthy Bakes
-              </span>
-              <span className="bg-white/20 text-slate-100 text-xs font-semibold px-3 py-1 rounded-full border border-white/20">
-                {currentSlide.tagline}
-              </span>
-            </div>
+          {/* Title (Savoria Font Style & Warm Contrast) */}
+          <h1 className="font-serif text-3xl md:text-5xl lg:text-5xl font-extrabold text-[#14233C] leading-[1.15] tracking-tight">
+            {slide.title}
+          </h1>
 
-            {/* Banner Title */}
-            <h2 className="font-serif text-2xl md:text-4xl lg:text-5xl font-bold leading-tight text-white drop-shadow-md">
-              {currentSlide.title}
-            </h2>
+          {/* Subtitle Description */}
+          <p className="text-sm md:text-base text-[#5A6D82] font-medium leading-relaxed max-w-lg">
+            {slide.subtitle}
+          </p>
 
-            {/* Subtitle */}
-            <p className="text-xs md:text-base text-amber-200 font-medium leading-relaxed">
-              {currentSlide.subtitle}
-            </p>
+          {/* Health Guarantee Tagline */}
+          <div className="text-xs font-bold text-[#D99036] bg-[#FAF2E8] border border-[#F3D1A5] px-4 py-2 rounded-2xl inline-block max-w-max">
+            {slide.tagline}
+          </div>
 
-            {/* Call to Action Pill Button */}
-            <div className="pt-1">
-              <a
-                href={currentSlide.buttonLink}
-                className="btn-pill-navy bg-[#D99036] hover:bg-[#B87524] text-white text-xs md:text-sm font-extrabold px-6 py-3 rounded-full shadow-lg hover:scale-105 transition-all inline-flex items-center gap-2"
-              >
-                <span>{currentSlide.buttonText}</span>
-                <ChevronRight className="w-4 h-4" />
-              </a>
-            </div>
+          {/* CTA Buttons Row (Savoria Rounded Buttons) */}
+          <div className="flex flex-wrap items-center gap-4 pt-2">
+            <a
+              href={slide.buttonLink}
+              className="btn-pill-navy bg-[#D99036] hover:bg-[#B87524] text-white text-sm font-extrabold px-8 py-3.5 rounded-full shadow-md hover:scale-105 transition-all flex items-center gap-2"
+            >
+              <span>{slide.buttonText}</span>
+            </a>
+            <a
+              href="#categories-section"
+              className="btn-pill-outline bg-white hover:bg-amber-50 text-[#1E3A5F] border-2 border-[#1E3A5F] text-sm font-extrabold px-7 py-3 rounded-full shadow-xs hover:scale-105 transition-all"
+            >
+              View Menu
+            </a>
           </div>
         </div>
 
-        {/* Carousel Navigation Buttons */}
-        <button
-          onClick={() => setCurrentIndex((prev) => (prev - 1 + MOCK_BANNERS.length) % MOCK_BANNERS.length)}
-          className="absolute left-4 top-1/2 -translate-y-1/2 w-11 h-11 rounded-full bg-black/40 backdrop-blur-md hover:bg-black/60 text-white flex items-center justify-center transition-all border border-white/20 shadow-lg"
-          aria-label="Previous Slide"
-        >
-          <ChevronLeft className="w-6 h-6" />
-        </button>
-        <button
-          onClick={() => setCurrentIndex((prev) => (prev + 1) % MOCK_BANNERS.length)}
-          className="absolute right-4 top-1/2 -translate-y-1/2 w-11 h-11 rounded-full bg-black/40 backdrop-blur-md hover:bg-black/60 text-white flex items-center justify-center transition-all border border-white/20 shadow-lg"
-          aria-label="Next Slide"
-        >
-          <ChevronRight className="w-6 h-6" />
-        </button>
+        {/* Right Crisp Image Showcase (Savoria Right Curved Chef Image Display) */}
+        <div className="lg:col-span-6 relative h-[300px] sm:h-[380px] lg:h-full w-full min-h-[420px] overflow-hidden lg:rounded-l-[40px]">
+          <Image
+            key={slide.id}
+            src={slide.imageUrl}
+            alt={slide.title}
+            fill
+            className="object-cover object-center transition-all duration-1000 ease-in-out hover:scale-105"
+            priority
+          />
 
-        {/* Slide Indicators */}
-        <div className="absolute bottom-5 right-6 flex items-center gap-2">
-          {MOCK_BANNERS.map((_, idx) => (
+          {/* Subtle Right Edge Soft Gradient */}
+          <div className="absolute inset-0 bg-gradient-to-t from-black/30 via-transparent to-transparent lg:bg-gradient-to-r lg:from-[#FAF5EE]/20 lg:to-transparent" />
+          
+          {/* Floating Slide Navigation Indicators */}
+          <div className="absolute bottom-6 right-6 flex items-center gap-3 z-20 bg-black/40 backdrop-blur-md px-4 py-2 rounded-full border border-white/20">
             <button
-              key={idx}
-              onClick={() => setCurrentIndex(idx)}
-              className={`h-2.5 rounded-full transition-all ${
-                idx === currentIndex ? 'w-8 bg-[#D99036]' : 'w-2.5 bg-white/60'
-              }`}
-              aria-label={`Go to slide ${idx + 1}`}
-            />
-          ))}
+              onClick={() => setCurrentIndex((prev) => (prev - 1 + HERO_SLIDES.length) % HERO_SLIDES.length)}
+              className="w-8 h-8 rounded-full bg-white/20 hover:bg-white/40 text-white flex items-center justify-center transition-colors"
+              aria-label="Previous Slide"
+            >
+              <ChevronLeft className="w-5 h-5" />
+            </button>
+            <span className="text-xs font-extrabold text-white font-mono">
+              0{currentIndex + 1} / 0{HERO_SLIDES.length}
+            </span>
+            <button
+              onClick={() => setCurrentIndex((prev) => (prev + 1) % HERO_SLIDES.length)}
+              className="w-8 h-8 rounded-full bg-white/20 hover:bg-white/40 text-white flex items-center justify-center transition-colors"
+              aria-label="Next Slide"
+            >
+              <ChevronRight className="w-5 h-5" />
+            </button>
+          </div>
         </div>
+
       </div>
-    </div>
+    </section>
   );
 }
