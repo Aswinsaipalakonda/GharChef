@@ -18,47 +18,47 @@ export default function HeroCarousel() {
   const currentSlide = MOCK_BANNERS[currentIndex];
 
   return (
-    <div className="relative w-full rounded-3xl overflow-hidden shadow-lg border border-[#1E3A5F]/10 bg-[#1E3A5F]">
-      <div className="relative h-[340px] md:h-[420px] lg:h-[460px] w-full">
-        {/* Background Image */}
+    <div className="relative w-full rounded-3xl overflow-hidden shadow-2xl border border-slate-200 bg-slate-900">
+      <div className="relative h-[380px] md:h-[460px] lg:h-[500px] w-full">
+        {/* Full Image Display Without Dark Color Overlays */}
         <Image
           src={currentSlide.imageUrl}
           alt={currentSlide.title}
           fill
-          className="object-cover opacity-35 transition-opacity duration-700"
+          className="object-cover opacity-100 transition-opacity duration-700"
           priority
         />
 
-        {/* Gradient Overlay */}
-        <div className="absolute inset-0 bg-gradient-to-r from-[#1E3A5F] via-[#1E3A5F]/85 to-transparent flex items-center p-6 md:p-12">
-          <div className="max-w-xl text-white space-y-4">
+        {/* Clean Vignette & Frosted Content Pill Overlay */}
+        <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent flex items-end p-6 md:p-12">
+          <div className="max-w-2xl bg-black/40 backdrop-blur-md p-6 md:p-8 rounded-3xl border border-white/20 text-white space-y-3.5 shadow-2xl">
             
-            {/* Health Highlights Tags */}
+            {/* Health Highlights Badges */}
             <div className="flex flex-wrap items-center gap-2">
-              <span className="bg-[#D99036] text-white text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wider shadow-sm flex items-center gap-1">
-                <Sparkles className="w-3.5 h-3.5" />
+              <span className="bg-[#D99036] text-white text-xs font-extrabold px-3.5 py-1 rounded-full uppercase tracking-wider shadow-md flex items-center gap-1.5">
+                <Sparkles className="w-3.5 h-3.5 text-amber-200" />
                 Fresh Healthy Bakes
               </span>
-              <span className="bg-[#EEF4FB]/20 backdrop-blur-md text-[#FAF5EE] text-xs font-semibold px-3 py-1 rounded-full border border-white/20">
+              <span className="bg-white/20 text-slate-100 text-xs font-semibold px-3 py-1 rounded-full border border-white/20">
                 {currentSlide.tagline}
               </span>
             </div>
 
             {/* Banner Title */}
-            <h2 className="font-serif text-2xl md:text-4xl lg:text-5xl font-bold leading-tight text-[#FAF5EE] drop-shadow-sm">
+            <h2 className="font-serif text-2xl md:text-4xl lg:text-5xl font-bold leading-tight text-white drop-shadow-md">
               {currentSlide.title}
             </h2>
 
             {/* Subtitle */}
-            <p className="text-sm md:text-lg text-amber-200/90 font-light">
+            <p className="text-xs md:text-base text-amber-200 font-medium leading-relaxed">
               {currentSlide.subtitle}
             </p>
 
-            {/* Call to Action Button */}
-            <div className="pt-2">
+            {/* Call to Action Pill Button */}
+            <div className="pt-1">
               <a
                 href={currentSlide.buttonLink}
-                className="btn-pill-navy bg-[#D99036] hover:bg-[#B87524] text-white text-sm md:text-base font-bold shadow-md hover:scale-105 transition-all inline-flex items-center gap-2"
+                className="btn-pill-navy bg-[#D99036] hover:bg-[#B87524] text-white text-xs md:text-sm font-extrabold px-6 py-3 rounded-full shadow-lg hover:scale-105 transition-all inline-flex items-center gap-2"
               >
                 <span>{currentSlide.buttonText}</span>
                 <ChevronRight className="w-4 h-4" />
@@ -67,30 +67,30 @@ export default function HeroCarousel() {
           </div>
         </div>
 
-        {/* Controls */}
+        {/* Carousel Navigation Buttons */}
         <button
           onClick={() => setCurrentIndex((prev) => (prev - 1 + MOCK_BANNERS.length) % MOCK_BANNERS.length)}
-          className="absolute left-4 top-1/2 -translate-y-1/2 w-9 h-9 rounded-full bg-white/20 backdrop-blur-md hover:bg-white/40 text-white flex items-center justify-center transition-colors"
+          className="absolute left-4 top-1/2 -translate-y-1/2 w-11 h-11 rounded-full bg-black/40 backdrop-blur-md hover:bg-black/60 text-white flex items-center justify-center transition-all border border-white/20 shadow-lg"
           aria-label="Previous Slide"
         >
-          <ChevronLeft className="w-5 h-5" />
+          <ChevronLeft className="w-6 h-6" />
         </button>
         <button
           onClick={() => setCurrentIndex((prev) => (prev + 1) % MOCK_BANNERS.length)}
-          className="absolute right-4 top-1/2 -translate-y-1/2 w-9 h-9 rounded-full bg-white/20 backdrop-blur-md hover:bg-white/40 text-white flex items-center justify-center transition-colors"
+          className="absolute right-4 top-1/2 -translate-y-1/2 w-11 h-11 rounded-full bg-black/40 backdrop-blur-md hover:bg-black/60 text-white flex items-center justify-center transition-all border border-white/20 shadow-lg"
           aria-label="Next Slide"
         >
-          <ChevronRight className="w-5 h-5" />
+          <ChevronRight className="w-6 h-6" />
         </button>
 
-        {/* Indicators */}
-        <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex items-center gap-2">
+        {/* Slide Indicators */}
+        <div className="absolute bottom-5 right-6 flex items-center gap-2">
           {MOCK_BANNERS.map((_, idx) => (
             <button
               key={idx}
               onClick={() => setCurrentIndex(idx)}
-              className={`h-2 rounded-full transition-all ${
-                idx === currentIndex ? 'w-8 bg-[#D99036]' : 'w-2 bg-white/50'
+              className={`h-2.5 rounded-full transition-all ${
+                idx === currentIndex ? 'w-8 bg-[#D99036]' : 'w-2.5 bg-white/60'
               }`}
               aria-label={`Go to slide ${idx + 1}`}
             />
