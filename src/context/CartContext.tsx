@@ -10,6 +10,7 @@ export interface CartItem {
   image: string;
   quantity: number;
   healthBadges: string[];
+  product?: any;
 }
 
 interface CartContextType {
@@ -22,7 +23,7 @@ interface CartContextType {
   gstAmount: number;
   cartTotal: number;
   appliedCoupon: any;
-  applyCoupon: (code: string) => boolean;
+  applyCoupon: (code: string) => { success: boolean; message: string };
   removeCoupon: () => void;
   addToCart: (item: Omit<CartItem, 'quantity'>) => void;
   removeFromCart: (id: string) => void;
@@ -55,12 +56,13 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
   }, [cart]);
 
   const addToCart = (item: Omit<CartItem, 'quantity'>) => {
+    const formattedItem = { ...item, product: item };
     setCart((prev) => {
       const existing = prev.find((i) => i.id === item.id);
       if (existing) {
         return prev.map((i) => (i.id === item.id ? { ...i, quantity: i.quantity + 1 } : i));
       }
-      return [...prev, { ...item, quantity: 1 }];
+      return [...prev, { ...formattedItem, quantity: 1 }];
     });
     setIsCartOpen(true);
   };
@@ -100,7 +102,7 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
         gstAmount: 0,
         cartTotal: totalAmount,
         appliedCoupon: null,
-        applyCoupon: () => true,
+        applyCoupon: () => ({ success: true, message: 'Coupon applied successfully' }),
         removeCoupon: () => {},
         addToCart,
         removeFromCart,
