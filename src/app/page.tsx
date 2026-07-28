@@ -9,7 +9,7 @@ import TestimonialsSection from '@/components/TestimonialsSection';
 import CartDrawer from '@/components/CartDrawer';
 import { MOCK_CATEGORIES, MOCK_PRODUCTS } from '@/data/mockData';
 import { useCart } from '@/context/CartContext';
-import { Sparkles, ShieldCheck, ArrowRight, HeartHandshake } from 'lucide-react';
+import { Sparkles, ArrowRight, Award, ShieldCheck, HeartHandshake } from 'lucide-react';
 
 export default function StorefrontHomePage() {
   const { cart, setIsCartOpen } = useCart();
@@ -28,10 +28,10 @@ export default function StorefrontHomePage() {
         onOpenCart={() => setIsCartOpen(true)}
       />
 
-      {/* Expanded Max-W Container for Full Width Layout */}
+      {/* Expanded Max-W Container for Full Width Awwwards Layout */}
       <main className="flex-1 max-w-[1440px] w-full mx-auto px-4 md:px-10 lg:px-12 py-8 space-y-16">
         
-        {/* 1. Hero Carousel */}
+        {/* 1. Full-Width Awwwards-Style Hero Carousel */}
         <HeroCarousel />
 
         {/* 2. Savoria Circular Image Category Cards Section (Enclosed Card with Border) */}
@@ -80,7 +80,40 @@ export default function StorefrontHomePage() {
           </div>
         </section>
 
-        {/* 3. Savoria Banner: "Taste the Best, Order Now" (Rounded Outer Card) */}
+        {/* 3. Value Proposition Guarantees Section with Real Images */}
+        <section className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <div className="bg-white rounded-[32px] p-6 border-2 border-[#1E3A5F]/15 shadow-sm flex items-center gap-4">
+            <div className="relative w-16 h-16 rounded-2xl overflow-hidden shrink-0 border border-amber-200">
+              <img src="https://images.unsplash.com/photo-1614735241165-6756e1df61ab?w=200&auto=format&fit=crop&q=80" alt="Jaggery" className="w-full h-full object-cover" />
+            </div>
+            <div>
+              <h4 className="font-serif font-bold text-base text-[#1E3A5F]">Organic Jaggery</h4>
+              <p className="text-xs text-[#5A6D82] mt-0.5">100% refined sugar free, sweetened naturally.</p>
+            </div>
+          </div>
+
+          <div className="bg-white rounded-[32px] p-6 border-2 border-[#1E3A5F]/15 shadow-sm flex items-center gap-4">
+            <div className="relative w-16 h-16 rounded-2xl overflow-hidden shrink-0 border border-amber-200">
+              <img src="https://images.unsplash.com/photo-1574323347407-f5e1ad6d020b?w=200&auto=format&fit=crop&q=80" alt="Whole Wheat" className="w-full h-full object-cover" />
+            </div>
+            <div>
+              <h4 className="font-serif font-bold text-base text-[#1E3A5F]">Whole Wheat &amp; Millets</h4>
+              <p className="text-xs text-[#5A6D82] mt-0.5">Zero maida, high-fiber nutrient dense flour.</p>
+            </div>
+          </div>
+
+          <div className="bg-white rounded-[32px] p-6 border-2 border-[#1E3A5F]/15 shadow-sm flex items-center gap-4">
+            <div className="relative w-16 h-16 rounded-2xl overflow-hidden shrink-0 border border-amber-200">
+              <img src="https://images.unsplash.com/photo-1589985270826-4b7bb135bc9d?w=200&auto=format&fit=crop&q=80" alt="Desi Ghee" className="w-full h-full object-cover" />
+            </div>
+            <div>
+              <h4 className="font-serif font-bold text-base text-[#1E3A5F]">Pure Cow Desi Ghee</h4>
+              <p className="text-xs text-[#5A6D82] mt-0.5">Zero dalda or refined palm oils used.</p>
+            </div>
+          </div>
+        </section>
+
+        {/* 4. Savoria Banner: "Taste the Best, Order Now" */}
         <section className="bg-gradient-to-r from-[#1E3A5F] via-[#1A3353] to-[#142842] text-[#FAF5EE] rounded-[36px] p-8 md:p-14 shadow-2xl border-2 border-[#1E3A5F]/30 relative overflow-hidden flex flex-col md:flex-row items-center justify-between gap-8">
           <div className="relative z-10 max-w-2xl space-y-3">
             <div className="flex items-center gap-2 text-[#D99036] font-extrabold text-xs uppercase tracking-wider">
@@ -104,7 +137,7 @@ export default function StorefrontHomePage() {
           </a>
         </section>
 
-        {/* 4. Section 1: Popular Bakes (Enclosed Rounded Card Container) */}
+        {/* 5. Section 1: Popular Bakes */}
         <div className="bg-white rounded-[36px] p-6 md:p-10 border-2 border-[#1E3A5F]/15 shadow-sm">
           <HorizontalProductRow
             id="popular-bakes"
@@ -114,7 +147,7 @@ export default function StorefrontHomePage() {
           />
         </div>
 
-        {/* 5. Section 2: Guilt-Free Cookies & Biscuits (Enclosed Rounded Card Container) */}
+        {/* 6. Section 2: Guilt-Free Cookies & Biscuits */}
         <div className="bg-white rounded-[36px] p-6 md:p-10 border-2 border-[#1E3A5F]/15 shadow-sm">
           <HorizontalProductRow
             id="cookies-section"
@@ -124,7 +157,7 @@ export default function StorefrontHomePage() {
           />
         </div>
 
-        {/* 6. Section 3: Whole Wheat Healthy Cakes */}
+        {/* 7. Section 3: Whole Wheat Healthy Cakes */}
         <div className="bg-white rounded-[36px] p-6 md:p-10 border-2 border-[#1E3A5F]/15 shadow-sm">
           <HorizontalProductRow
             id="cakes-section"
@@ -134,7 +167,7 @@ export default function StorefrontHomePage() {
           />
         </div>
 
-        {/* 7. Section 4: Teatime Dry Bakes & Rusks */}
+        {/* 8. Section 4: Teatime Dry Bakes & Rusks */}
         <div className="bg-white rounded-[36px] p-6 md:p-10 border-2 border-[#1E3A5F]/15 shadow-sm">
           <HorizontalProductRow
             id="drybakes-section"
@@ -144,8 +177,10 @@ export default function StorefrontHomePage() {
           />
         </div>
 
-        {/* 8. Customer Reviews & Testimonials Section */}
-        <TestimonialsSection />
+        {/* 9. Customer Reviews & Testimonials Section */}
+        <div id="reviews-section">
+          <TestimonialsSection />
+        </div>
 
       </main>
 
