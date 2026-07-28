@@ -10,24 +10,24 @@ export interface Category {
 export interface BakeProduct {
   id: string;
   name: string;
-  slug: string;
+  slug?: string;
   description: string;
   ingredients: string[];
   price: number;
-  mrp: number;
-  weight: string;
-  weightOptions: string[];
+  mrp?: number;
+  weight?: string;
+  weightOptions?: string[];
   rating: number;
   reviewsCount: number;
   image: string;
-  images: string[];
+  images?: string[];
   category: string;
-  healthBadges: string[];
+  healthBadges?: string[];
   isTopProduct?: boolean;
   isBestSeller?: boolean;
   isAvailable: boolean;
-  inStock: boolean;
-  shelfLife: string;
+  inStock?: boolean;
+  shelfLife?: string;
   // Legacy compatibility fields
   chefName?: string;
   chefId?: string;
