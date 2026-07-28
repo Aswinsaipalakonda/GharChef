@@ -82,46 +82,45 @@ export const BANK_OFFERS = [
 export default function HeroCarousel() {
   const [currentIndex, setCurrentIndex] = useState(0);
 
-  // Smooth 2.5-Second Autoplay
+  // Smooth 3-Second Autoplay
   useEffect(() => {
     const timer = setInterval(() => {
       setCurrentIndex((prev) => (prev + 1) % HERO_SLIDES.length);
-    }, 2500);
+    }, 3000);
     return () => clearInterval(timer);
   }, []);
 
   return (
     <section className="space-y-4 w-full">
-      {/* 1. Increased Vertical Height (720px) & Smooth Horizontal Track Motion Container */}
+      {/* 1. Full-Width 100% Canvas Hero Container (Fixed Width Overflow Cut Off Issue) */}
       <div className="relative w-full rounded-[36px] overflow-hidden shadow-2xl border-2 border-[#1E3A5F]/20 bg-slate-950">
         
-        {/* Horizontal Sliding Track with CSS Translate Transform */}
-        <div 
-          className="flex h-[560px] md:h-[640px] lg:h-[720px] w-full transition-transform duration-700 ease-out"
-          style={{ transform: `translateX(-${currentIndex * 100}%)` }}
-        >
-          {HERO_SLIDES.map((slide) => (
+        {/* Full-Bleed Hero Slide Canvas */}
+        <div className="relative h-[480px] md:h-[540px] lg:h-[580px] w-full flex items-center overflow-hidden">
+          {HERO_SLIDES.map((slide, idx) => (
             <div 
               key={slide.id} 
-              className="relative min-w-full h-full flex items-center shrink-0"
+              className={`absolute inset-0 w-full h-full transition-opacity duration-1000 ease-in-out ${
+                idx === currentIndex ? 'opacity-100 z-10 pointer-events-auto' : 'opacity-0 z-0 pointer-events-none'
+              }`}
             >
-              {/* Crisp Slide Image Display */}
+              {/* Crisp 100% Canvas Background Image */}
               <Image
                 src={slide.imageUrl}
                 alt={slide.title}
                 fill
                 className="object-cover object-center"
-                priority
+                priority={idx === 0}
               />
 
-              {/* Clean Vignette Overlay Mask for Text Legibility */}
-              <div className="absolute inset-0 bg-gradient-to-r from-slate-950/85 via-slate-950/40 to-transparent lg:w-[60%]" />
-              <div className="absolute inset-0 bg-gradient-to-t from-slate-950/70 via-transparent to-transparent" />
+              {/* Full Width Gradient Vignette (Gives contrast to left text while keeping right 60% full visible) */}
+              <div className="absolute inset-0 bg-gradient-to-r from-slate-950/90 via-slate-950/50 to-transparent lg:w-[65%]" />
+              <div className="absolute inset-0 bg-gradient-to-t from-slate-950/80 via-transparent to-transparent" />
 
-              {/* Content Box */}
-              <div className="relative z-10 max-w-2xl p-8 md:p-14 lg:p-16 space-y-5 text-white">
+              {/* Text Overlay Content */}
+              <div className="relative z-20 max-w-2xl p-8 md:p-14 lg:p-16 space-y-4 text-white h-full flex flex-col justify-center">
                 
-                {/* Badges Row */}
+                {/* Badges */}
                 <div className="flex flex-wrap items-center gap-2.5">
                   <span className="bg-[#D99036] text-white text-xs font-extrabold px-3.5 py-1.5 rounded-full uppercase tracking-wider shadow-md flex items-center gap-1.5">
                     <Sparkles className="w-3.5 h-3.5 text-amber-200" />
@@ -143,8 +142,8 @@ export default function HeroCarousel() {
                   {slide.subtitle}
                 </p>
 
-                {/* CTA Button */}
-                <div className="pt-3">
+                {/* CTA Action Button */}
+                <div className="pt-2">
                   <a
                     href={slide.buttonLink}
                     className="btn-pill-navy bg-[#D99036] hover:bg-[#B87524] text-white text-sm font-extrabold px-8 py-3.5 rounded-full shadow-xl hover:scale-105 transition-all inline-flex items-center gap-2"
@@ -156,38 +155,38 @@ export default function HeroCarousel() {
               </div>
             </div>
           ))}
+
+          {/* Centered Navigation Dots */}
+          <div className="absolute bottom-6 left-1/2 -translate-x-1/2 z-30 flex items-center gap-2 bg-black/40 backdrop-blur-md px-4 py-2 rounded-full border border-white/20">
+            {HERO_SLIDES.map((_, idx) => (
+              <button
+                key={idx}
+                onClick={() => setCurrentIndex(idx)}
+                className={`h-2 rounded-full transition-all duration-300 cursor-pointer ${
+                  idx === currentIndex ? 'w-8 bg-[#D99036]' : 'w-2 bg-white/50 hover:bg-white/80'
+                }`}
+                aria-label={`Go to slide ${idx + 1}`}
+              />
+            ))}
+          </div>
+
+          {/* Left/Right Arrow Controls */}
+          <button
+            onClick={() => setCurrentIndex((prev) => (prev - 1 + HERO_SLIDES.length) % HERO_SLIDES.length)}
+            className="absolute left-4 top-1/2 -translate-y-1/2 w-11 h-11 rounded-full bg-black/40 backdrop-blur-md hover:bg-[#D99036] text-white flex items-center justify-center transition-all border border-white/20 z-30 shadow-lg cursor-pointer"
+            aria-label="Previous Slide"
+          >
+            <ChevronLeft className="w-6 h-6" />
+          </button>
+          <button
+            onClick={() => setCurrentIndex((prev) => (prev + 1) % HERO_SLIDES.length)}
+            className="absolute right-4 top-1/2 -translate-y-1/2 w-11 h-11 rounded-full bg-black/40 backdrop-blur-md hover:bg-[#D99036] text-white flex items-center justify-center transition-all border border-white/20 z-30 shadow-lg cursor-pointer"
+            aria-label="Next Slide"
+          >
+            <ChevronRight className="w-6 h-6" />
+          </button>
+
         </div>
-
-        {/* Interactive Navigation Dots */}
-        <div className="absolute bottom-6 left-1/2 -translate-x-1/2 z-20 flex items-center gap-2 bg-black/40 backdrop-blur-md px-4 py-2 rounded-full border border-white/20">
-          {HERO_SLIDES.map((_, idx) => (
-            <button
-              key={idx}
-              onClick={() => setCurrentIndex(idx)}
-              className={`h-2 rounded-full transition-all duration-300 cursor-pointer ${
-                idx === currentIndex ? 'w-8 bg-[#D99036]' : 'w-2 bg-white/50 hover:bg-white/80'
-              }`}
-              aria-label={`Go to slide ${idx + 1}`}
-            />
-          ))}
-        </div>
-
-        {/* Next / Prev Controls */}
-        <button
-          onClick={() => setCurrentIndex((prev) => (prev - 1 + HERO_SLIDES.length) % HERO_SLIDES.length)}
-          className="absolute left-4 top-1/2 -translate-y-1/2 w-11 h-11 rounded-full bg-black/40 backdrop-blur-md hover:bg-[#D99036] text-white flex items-center justify-center transition-all border border-white/20 z-20 shadow-lg cursor-pointer"
-          aria-label="Previous Slide"
-        >
-          <ChevronLeft className="w-6 h-6" />
-        </button>
-        <button
-          onClick={() => setCurrentIndex((prev) => (prev + 1) % HERO_SLIDES.length)}
-          className="absolute right-4 top-1/2 -translate-y-1/2 w-11 h-11 rounded-full bg-black/40 backdrop-blur-md hover:bg-[#D99036] text-white flex items-center justify-center transition-all border border-white/20 z-20 shadow-lg cursor-pointer"
-          aria-label="Next Slide"
-        >
-          <ChevronRight className="w-6 h-6" />
-        </button>
-
       </div>
 
       {/* 2. Special Deals & Bank Offers Ticker Strip */}
