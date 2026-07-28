@@ -721,7 +721,7 @@ export default function SellerDashboard() {
                             <span className={`inline-block px-2 py-0.5 rounded text-[9px] font-bold ${
                               p.foodType === "veg" ? "bg-emerald-50 text-emerald-600" : "bg-rose-50 text-rose-600"
                             }`}>
-                              {p.foodType.toUpperCase()}
+                              {p.foodType?.toUpperCase()}
                             </span>
                           </td>
                           <td className="py-4">
