@@ -82,107 +82,115 @@ export const BANK_OFFERS = [
 export default function HeroCarousel() {
   const [currentIndex, setCurrentIndex] = useState(0);
 
-  // Smooth 2-Second Autoplay
+  // Smooth 2.5-Second Autoplay
   useEffect(() => {
     const timer = setInterval(() => {
       setCurrentIndex((prev) => (prev + 1) % HERO_SLIDES.length);
-    }, 2000);
+    }, 2500);
     return () => clearInterval(timer);
   }, []);
 
-  const currentSlide = HERO_SLIDES[currentIndex];
-
   return (
     <section className="space-y-4 w-full">
-      {/* 1. Increased Height & Ultra-Clean Hero Banner Slider (Height expanded to 580px - 660px) */}
+      {/* 1. Increased Vertical Height (720px) & Smooth Horizontal Track Motion Container */}
       <div className="relative w-full rounded-[36px] overflow-hidden shadow-2xl border-2 border-[#1E3A5F]/20 bg-slate-950">
-        <div className="relative h-[520px] md:h-[600px] lg:h-[660px] w-full flex items-center">
-          
-          {/* Crisp Slide Image Display */}
-          <Image
-            key={currentSlide.id}
-            src={currentSlide.imageUrl}
-            alt={currentSlide.title}
-            fill
-            className="object-cover object-center transition-all duration-700 ease-in-out scale-100 hover:scale-105"
-            priority
-          />
-
-          {/* Clean Gradient Overlay Mask: Balanced Vignette for Maximum Image Visibility */}
-          <div className="absolute inset-0 bg-gradient-to-r from-slate-950/85 via-slate-950/40 to-transparent lg:w-[60%]" />
-          <div className="absolute inset-0 bg-gradient-to-t from-slate-950/70 via-transparent to-transparent" />
-
-          {/* Clean Floating Content Box */}
-          <div className="relative z-10 max-w-2xl p-8 md:p-14 lg:p-16 space-y-4 text-white">
-            
-            {/* Top Badges Row */}
-            <div className="flex flex-wrap items-center gap-2.5">
-              <span className="bg-[#D99036] text-white text-xs font-extrabold px-3.5 py-1.5 rounded-full uppercase tracking-wider shadow-md flex items-center gap-1.5">
-                <Sparkles className="w-3.5 h-3.5 text-amber-200" />
-                {currentSlide.badge}
-              </span>
-              <span className="bg-red-600/90 text-white text-xs font-black px-3.5 py-1.5 rounded-full uppercase tracking-wide border border-red-400/40 shadow-md flex items-center gap-1">
-                <Tag className="w-3.5 h-3.5" />
-                {currentSlide.offerBadge}
-              </span>
-            </div>
-
-            {/* Concise Bold Title */}
-            <h1 className="font-serif text-3xl md:text-5xl lg:text-6xl font-extrabold leading-[1.12] tracking-tight text-white drop-shadow-md">
-              {currentSlide.title}
-            </h1>
-
-            {/* Clean Short Subtitle */}
-            <p className="text-sm md:text-base text-slate-200 font-medium leading-relaxed max-w-md drop-shadow-xs">
-              {currentSlide.subtitle}
-            </p>
-
-            {/* Clean Rounded CTA Button */}
-            <div className="pt-3">
-              <a
-                href={currentSlide.buttonLink}
-                className="btn-pill-navy bg-[#D99036] hover:bg-[#B87524] text-white text-sm font-extrabold px-8 py-3.5 rounded-full shadow-xl hover:scale-105 transition-all inline-flex items-center gap-2"
-              >
-                <span>{currentSlide.buttonText}</span>
-                <ArrowRight className="w-4 h-4" />
-              </a>
-            </div>
-          </div>
-
-          {/* Interactive Navigation Dots (Beauty Centre Style Pill Dots) */}
-          <div className="absolute bottom-6 left-1/2 -translate-x-1/2 z-20 flex items-center gap-2 bg-black/40 backdrop-blur-md px-4 py-2 rounded-full border border-white/20">
-            {HERO_SLIDES.map((_, idx) => (
-              <button
-                key={idx}
-                onClick={() => setCurrentIndex(idx)}
-                className={`h-2 rounded-full transition-all duration-300 cursor-pointer ${
-                  idx === currentIndex ? 'w-8 bg-[#D99036]' : 'w-2 bg-white/50 hover:bg-white/80'
-                }`}
-                aria-label={`Go to slide ${idx + 1}`}
+        
+        {/* Horizontal Sliding Track with CSS Translate Transform */}
+        <div 
+          className="flex h-[560px] md:h-[640px] lg:h-[720px] w-full transition-transform duration-700 ease-out"
+          style={{ transform: `translateX(-${currentIndex * 100}%)` }}
+        >
+          {HERO_SLIDES.map((slide) => (
+            <div 
+              key={slide.id} 
+              className="relative min-w-full h-full flex items-center shrink-0"
+            >
+              {/* Crisp Slide Image Display */}
+              <Image
+                src={slide.imageUrl}
+                alt={slide.title}
+                fill
+                className="object-cover object-center"
+                priority
               />
-            ))}
-          </div>
 
-          {/* Next / Prev Controls */}
-          <button
-            onClick={() => setCurrentIndex((prev) => (prev - 1 + HERO_SLIDES.length) % HERO_SLIDES.length)}
-            className="absolute left-4 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-black/40 backdrop-blur-md hover:bg-[#D99036] text-white flex items-center justify-center transition-all border border-white/20 z-20 shadow-lg cursor-pointer"
-            aria-label="Previous Slide"
-          >
-            <ChevronLeft className="w-6 h-6" />
-          </button>
-          <button
-            onClick={() => setCurrentIndex((prev) => (prev + 1) % HERO_SLIDES.length)}
-            className="absolute right-4 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-black/40 backdrop-blur-md hover:bg-[#D99036] text-white flex items-center justify-center transition-all border border-white/20 z-20 shadow-lg cursor-pointer"
-            aria-label="Next Slide"
-          >
-            <ChevronRight className="w-6 h-6" />
-          </button>
+              {/* Clean Vignette Overlay Mask for Text Legibility */}
+              <div className="absolute inset-0 bg-gradient-to-r from-slate-950/85 via-slate-950/40 to-transparent lg:w-[60%]" />
+              <div className="absolute inset-0 bg-gradient-to-t from-slate-950/70 via-transparent to-transparent" />
 
+              {/* Content Box */}
+              <div className="relative z-10 max-w-2xl p-8 md:p-14 lg:p-16 space-y-5 text-white">
+                
+                {/* Badges Row */}
+                <div className="flex flex-wrap items-center gap-2.5">
+                  <span className="bg-[#D99036] text-white text-xs font-extrabold px-3.5 py-1.5 rounded-full uppercase tracking-wider shadow-md flex items-center gap-1.5">
+                    <Sparkles className="w-3.5 h-3.5 text-amber-200" />
+                    {slide.badge}
+                  </span>
+                  <span className="bg-red-600/90 text-white text-xs font-black px-3.5 py-1.5 rounded-full uppercase tracking-wide border border-red-400/40 shadow-md flex items-center gap-1">
+                    <Tag className="w-3.5 h-3.5" />
+                    {slide.offerBadge}
+                  </span>
+                </div>
+
+                {/* Title */}
+                <h1 className="font-serif text-3xl md:text-5xl lg:text-6xl font-extrabold leading-[1.12] tracking-tight text-white drop-shadow-md">
+                  {slide.title}
+                </h1>
+
+                {/* Subtitle */}
+                <p className="text-sm md:text-base text-slate-200 font-medium leading-relaxed max-w-md drop-shadow-xs">
+                  {slide.subtitle}
+                </p>
+
+                {/* CTA Button */}
+                <div className="pt-3">
+                  <a
+                    href={slide.buttonLink}
+                    className="btn-pill-navy bg-[#D99036] hover:bg-[#B87524] text-white text-sm font-extrabold px-8 py-3.5 rounded-full shadow-xl hover:scale-105 transition-all inline-flex items-center gap-2"
+                  >
+                    <span>{slide.buttonText}</span>
+                    <ArrowRight className="w-4 h-4" />
+                  </a>
+                </div>
+              </div>
+            </div>
+          ))}
         </div>
+
+        {/* Interactive Navigation Dots */}
+        <div className="absolute bottom-6 left-1/2 -translate-x-1/2 z-20 flex items-center gap-2 bg-black/40 backdrop-blur-md px-4 py-2 rounded-full border border-white/20">
+          {HERO_SLIDES.map((_, idx) => (
+            <button
+              key={idx}
+              onClick={() => setCurrentIndex(idx)}
+              className={`h-2 rounded-full transition-all duration-300 cursor-pointer ${
+                idx === currentIndex ? 'w-8 bg-[#D99036]' : 'w-2 bg-white/50 hover:bg-white/80'
+              }`}
+              aria-label={`Go to slide ${idx + 1}`}
+            />
+          ))}
+        </div>
+
+        {/* Next / Prev Controls */}
+        <button
+          onClick={() => setCurrentIndex((prev) => (prev - 1 + HERO_SLIDES.length) % HERO_SLIDES.length)}
+          className="absolute left-4 top-1/2 -translate-y-1/2 w-11 h-11 rounded-full bg-black/40 backdrop-blur-md hover:bg-[#D99036] text-white flex items-center justify-center transition-all border border-white/20 z-20 shadow-lg cursor-pointer"
+          aria-label="Previous Slide"
+        >
+          <ChevronLeft className="w-6 h-6" />
+        </button>
+        <button
+          onClick={() => setCurrentIndex((prev) => (prev + 1) % HERO_SLIDES.length)}
+          className="absolute right-4 top-1/2 -translate-y-1/2 w-11 h-11 rounded-full bg-black/40 backdrop-blur-md hover:bg-[#D99036] text-white flex items-center justify-center transition-all border border-white/20 z-20 shadow-lg cursor-pointer"
+          aria-label="Next Slide"
+        >
+          <ChevronRight className="w-6 h-6" />
+        </button>
+
       </div>
 
-      {/* 2. Special Deals & Bank Offers Ticker Strip Directly Below Hero Banner */}
+      {/* 2. Special Deals & Bank Offers Ticker Strip */}
       <div className="bg-white rounded-[28px] p-4 border-2 border-[#1E3A5F]/15 shadow-sm overflow-hidden">
         <div className="flex items-center gap-3 mb-2 px-2">
           <div className="w-7 h-7 rounded-full bg-amber-100 flex items-center justify-center text-[#D99036]">
