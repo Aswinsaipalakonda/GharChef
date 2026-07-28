@@ -9,7 +9,7 @@ import TestimonialsSection from '@/components/TestimonialsSection';
 import CartDrawer from '@/components/CartDrawer';
 import { MOCK_CATEGORIES, MOCK_PRODUCTS } from '@/data/mockData';
 import { useCart } from '@/context/CartContext';
-import { Sparkles, ArrowRight, Award, ShieldCheck, HeartHandshake } from 'lucide-react';
+import { Sparkles, ArrowRight } from 'lucide-react';
 
 export default function StorefrontHomePage() {
   const { cart, setIsCartOpen } = useCart();
@@ -34,7 +34,7 @@ export default function StorefrontHomePage() {
         {/* 1. Full-Width Awwwards-Style Hero Carousel */}
         <HeroCarousel />
 
-        {/* 2. Savoria Circular Image Category Cards Section (Enclosed Card with Border) */}
+        {/* 2. Savoria Circular Image Category Cards Section */}
         <section id="categories-section" className="bg-white rounded-[36px] p-8 md:p-12 border-2 border-[#1E3A5F]/15 shadow-sm space-y-8 text-center">
           <div>
             <span className="text-xs font-extrabold uppercase tracking-widest text-[#D99036] bg-amber-50 px-4 py-1.5 rounded-full border border-amber-200 inline-block mb-2">
