@@ -2,13 +2,12 @@
 
 import React, { useState, useEffect } from 'react';
 import Image from 'next/image';
-import { ChevronLeft, ChevronRight, Sparkles, ArrowRight, Tag, Gift, Percent } from 'lucide-react';
+import { ChevronLeft, ChevronRight, Sparkles, ArrowRight, Tag, Gift } from 'lucide-react';
 
 export interface HeroSlide {
   id: string;
   title: string;
   subtitle: string;
-  tagline: string;
   imageUrl: string;
   buttonText: string;
   buttonLink: string;
@@ -20,35 +19,32 @@ export const HERO_SLIDES: HeroSlide[] = [
   {
     id: "hero-1",
     title: "100% Organic Jaggery & Whole Wheat Cakes",
-    subtitle: "Deliciously rich & moist healthy cakes baked fresh every morning without refined white sugars or artificial preservatives.",
-    tagline: "🎂 Pure Organic Jaggery • 100% Maida Free",
+    subtitle: "Freshly baked every morning with pure cow desi ghee • Zero Maida • Zero White Sugar.",
     imageUrl: "https://images.unsplash.com/photo-1578985545062-69928b1d9587?w=1600&auto=format&fit=crop&q=80",
-    buttonText: "Order Fresh Cakes Now",
+    buttonText: "Order Fresh Cakes",
     buttonLink: "#popular-bakes",
-    badge: "100% Whole Wheat Bakes",
-    offerBadge: "FLAT 20% OFF ON FIRST ORDER",
+    badge: "100% Organic Jaggery",
+    offerBadge: "FLAT 20% OFF",
   },
   {
     id: "hero-2",
     title: "Crunchy Artisanal Millet & Oats Cookies",
-    subtitle: "Nutrient-dense teatime snacks made with Ragi, Foxtail Millet, Almonds, Pistachios, and Pure Cow Desi Ghee.",
-    tagline: "🍪 Fiber Rich • Zero Trans Fat • Pure Desi Ghee",
+    subtitle: "Nutrient-dense Ragi & Foxtail Millet cookies with toasted almonds & pistachios.",
     imageUrl: "https://images.unsplash.com/photo-1499636136210-6f4ee915583e?w=1600&auto=format&fit=crop&q=80",
-    buttonText: "Explore Millet Cookies",
+    buttonText: "Explore Cookies",
     buttonLink: "#cookies-section",
-    badge: "Guilt-Free Teatime Treats",
-    offerBadge: "BUY 2 GET 1 FREE ON COOKIES",
+    badge: "Guilt-Free Teatime",
+    offerBadge: "BUY 2 GET 1 FREE",
   },
   {
     id: "hero-3",
     title: "Handcrafted Healthy Bakes for Special Moments",
-    subtitle: "Celebrate health and flavor together with farm-fresh organic ingredients delivered straight from our oven to your door.",
-    tagline: "🌾 No Sugar • No Maida • No Preservatives • No Dalda",
+    subtitle: "Farm-fresh organic ingredients delivered straight from our oven to your door in Vizag & Hyderabad.",
     imageUrl: "https://images.unsplash.com/photo-1556910103-1c02745aae4d?w=1600&auto=format&fit=crop&q=80",
-    buttonText: "Browse Full Menu",
+    buttonText: "View Full Menu",
     buttonLink: "#categories-section",
-    badge: "Master Artisan Oven",
-    offerBadge: "FREE EXPRESS DELIVERY ON ORDERS OVER ₹499",
+    badge: "Master Artisan Bake",
+    offerBadge: "FREE EXPRESS DELIVERY",
   },
 ];
 
@@ -59,8 +55,6 @@ export const BANK_OFFERS = [
     bank: "UPI Payments",
     code: "HEALTHY150",
     desc: "Valid on orders above ₹599",
-    iconBg: "bg-emerald-500/10 text-emerald-600 border-emerald-500/20",
-    badgeColor: "bg-emerald-100 text-emerald-800",
   },
   {
     id: "off-2",
@@ -68,8 +62,6 @@ export const BANK_OFFERS = [
     bank: "Vizag & Hyd Special",
     code: "FRESHBAKE",
     desc: "100% Maida Free Jaggery Cakes",
-    iconBg: "bg-[#D99036]/10 text-[#D99036] border-[#D99036]/20",
-    badgeColor: "bg-amber-100 text-amber-800",
   },
   {
     id: "off-3",
@@ -77,8 +69,6 @@ export const BANK_OFFERS = [
     bank: "Cookie Combos",
     code: "GIFTCOOKIE",
     desc: "On buying any 3 millet cookie packs",
-    iconBg: "bg-blue-500/10 text-blue-600 border-blue-500/20",
-    badgeColor: "bg-blue-100 text-blue-800",
   },
   {
     id: "off-4",
@@ -86,15 +76,13 @@ export const BANK_OFFERS = [
     bank: "WhatsApp Pay & UPI",
     code: "BHAGYA20",
     desc: "Instant credit on order confirmation",
-    iconBg: "bg-purple-500/10 text-purple-600 border-purple-500/20",
-    badgeColor: "bg-purple-100 text-purple-800",
   },
 ];
 
 export default function HeroCarousel() {
   const [currentIndex, setCurrentIndex] = useState(0);
 
-  // Exact 2-Second Autoplay Transition as requested
+  // Smooth 2-Second Autoplay
   useEffect(() => {
     const timer = setInterval(() => {
       setCurrentIndex((prev) => (prev + 1) % HERO_SLIDES.length);
@@ -106,9 +94,9 @@ export default function HeroCarousel() {
 
   return (
     <section className="space-y-4 w-full">
-      {/* 1. Beauty Centre Style Hero Banner Slider (Ultra-Smooth 2-Sec Autoplay & Rounded Card Container) */}
+      {/* 1. Increased Height & Ultra-Clean Hero Banner Slider (Height expanded to 580px - 660px) */}
       <div className="relative w-full rounded-[36px] overflow-hidden shadow-2xl border-2 border-[#1E3A5F]/20 bg-slate-950">
-        <div className="relative min-h-[460px] md:min-h-[520px] lg:min-h-[560px] w-full flex items-center">
+        <div className="relative h-[520px] md:h-[600px] lg:h-[660px] w-full flex items-center">
           
           {/* Crisp Slide Image Display */}
           <Image
@@ -120,16 +108,16 @@ export default function HeroCarousel() {
             priority
           />
 
-          {/* Vignette Overlay for Text Contrast */}
-          <div className="absolute inset-0 bg-gradient-to-r from-slate-950/90 via-slate-950/65 to-transparent lg:w-[65%]" />
-          <div className="absolute inset-0 bg-gradient-to-t from-slate-950/80 via-transparent to-transparent" />
+          {/* Clean Gradient Overlay Mask: Balanced Vignette for Maximum Image Visibility */}
+          <div className="absolute inset-0 bg-gradient-to-r from-slate-950/85 via-slate-950/40 to-transparent lg:w-[60%]" />
+          <div className="absolute inset-0 bg-gradient-to-t from-slate-950/70 via-transparent to-transparent" />
 
-          {/* Floating Content Box with Offer Badge */}
-          <div className="relative z-10 max-w-3xl p-8 md:p-14 lg:p-16 space-y-5 text-white">
+          {/* Clean Floating Content Box */}
+          <div className="relative z-10 max-w-2xl p-8 md:p-14 lg:p-16 space-y-4 text-white">
             
             {/* Top Badges Row */}
             <div className="flex flex-wrap items-center gap-2.5">
-              <span className="bg-[#D99036] text-white text-xs font-extrabold px-4 py-1.5 rounded-full uppercase tracking-wider shadow-lg flex items-center gap-1.5">
+              <span className="bg-[#D99036] text-white text-xs font-extrabold px-3.5 py-1.5 rounded-full uppercase tracking-wider shadow-md flex items-center gap-1.5">
                 <Sparkles className="w-3.5 h-3.5 text-amber-200" />
                 {currentSlide.badge}
               </span>
@@ -139,35 +127,24 @@ export default function HeroCarousel() {
               </span>
             </div>
 
-            {/* Banner Title */}
-            <h1 className="font-serif text-3xl md:text-5xl lg:text-6xl font-extrabold leading-[1.12] tracking-tight text-white drop-shadow-lg">
+            {/* Concise Bold Title */}
+            <h1 className="font-serif text-3xl md:text-5xl lg:text-6xl font-extrabold leading-[1.12] tracking-tight text-white drop-shadow-md">
               {currentSlide.title}
             </h1>
 
-            {/* Subtitle Description */}
-            <p className="text-sm md:text-lg text-slate-200 font-medium leading-relaxed max-w-xl drop-shadow-sm">
+            {/* Clean Short Subtitle */}
+            <p className="text-sm md:text-base text-slate-200 font-medium leading-relaxed max-w-md drop-shadow-xs">
               {currentSlide.subtitle}
             </p>
 
-            {/* Health Guarantee Tagline */}
-            <div className="text-xs font-bold text-amber-300 bg-black/40 backdrop-blur-md border border-amber-400/30 px-4 py-2 rounded-2xl inline-block shadow-md">
-              {currentSlide.tagline}
-            </div>
-
-            {/* CTA Buttons */}
-            <div className="flex flex-wrap items-center gap-4 pt-2">
+            {/* Clean Rounded CTA Button */}
+            <div className="pt-3">
               <a
                 href={currentSlide.buttonLink}
-                className="btn-pill-navy bg-[#D99036] hover:bg-[#B87524] text-white text-sm font-extrabold px-9 py-4 rounded-full shadow-xl hover:scale-105 transition-all flex items-center gap-2"
+                className="btn-pill-navy bg-[#D99036] hover:bg-[#B87524] text-white text-sm font-extrabold px-8 py-3.5 rounded-full shadow-xl hover:scale-105 transition-all inline-flex items-center gap-2"
               >
                 <span>{currentSlide.buttonText}</span>
                 <ArrowRight className="w-4 h-4" />
-              </a>
-              <a
-                href="#categories-section"
-                className="btn-pill-outline bg-white/10 hover:bg-white/20 backdrop-blur-md text-white border-2 border-white/40 text-sm font-extrabold px-8 py-3.5 rounded-full shadow-md hover:scale-105 transition-all"
-              >
-                View Menu
               </a>
             </div>
           </div>
@@ -205,7 +182,7 @@ export default function HeroCarousel() {
         </div>
       </div>
 
-      {/* 2. Beauty Centre Style Offers Ticker Strip (Bank Offers Marquee Directly Below Hero Banner) */}
+      {/* 2. Special Deals & Bank Offers Ticker Strip Directly Below Hero Banner */}
       <div className="bg-white rounded-[28px] p-4 border-2 border-[#1E3A5F]/15 shadow-sm overflow-hidden">
         <div className="flex items-center gap-3 mb-2 px-2">
           <div className="w-7 h-7 rounded-full bg-amber-100 flex items-center justify-center text-[#D99036]">
