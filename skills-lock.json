@@ -1,6 +1,12 @@
 {
   "version": 1,
   "skills": {
+    "ruflo": {
+      "source": "ruvnet/ruflo",
+      "sourceType": "github",
+      "skillPath": "SKILL.md",
+      "computedHash": "744a7305b75aaf91c369676e5305c0eade130ab91d284df8dfcfb55eff0472b9"
+    },
     "ui-ux-pro-max": {
       "source": "nextlevelbuilder/ui-ux-pro-max-skill",
       "sourceType": "github",
